@@ -1,0 +1,29 @@
+{
+  "result": "PASS",
+  "method": "Independent second execution of the unmodified teacher generator with the same inputs, cached AEMO file, seed and parameters. All four raw CSV SHA-256 hashes compared.",
+  "command": [
+    "C:\\Users\\LL\\AppData\\Local\\Programs\\Python\\Python312\\python.exe",
+    "vendor/data_generator/generate_dataset.py",
+    "--stations",
+    "data/input/stations.csv",
+    "--start",
+    "2026-09-15",
+    "--days",
+    "1",
+    "--out",
+    "C:\\Users\\LL\\Desktop\\comp5339\\tmp\\a2-task1-repro-3q3obitv",
+    "--seed",
+    "5339",
+    "--sessions-per-connector-day",
+    "3",
+    "2"
+  ],
+  "output_files_identical": {
+    "stations.csv": true,
+    "prices_hourly.csv": true,
+    "sessions.csv": true,
+    "session_metering.csv": true
+  },
+  "generator_stdout": "432 stations, 10368 hourly prices, 4021 charging-sessions, 121800 meter-events -> C:\\Users\\LL\\Desktop\\comp5339\\tmp\\a2-task1-repro-3q3obitv/\n  urban    mean  31.7 min /  25.4 kWh   (ARENA 2023: 27.3 min / 27.0 kWh)\n  regional mean  27.3 min /  25.0 kWh   (ARENA 2023: 25.9 min / 24.5 kWh)\n  price $/kWh min 0.40  mean 0.67  max 0.92\n",
+  "generator_stderr": ""
+}

@@ -1,0 +1,63 @@
+{
+  "result": "PASS",
+  "aemo": {
+    "result": "PASS",
+    "source_url": "https://www.aemo.com.au/aemo/data/nem/priceanddemand/PRICE_AND_DEMAND_202609_NSW1.csv",
+    "sha256": "85af3e1f68823c3eef87fcc98e5fa605c609b568ec64d6ef36b96722f8db8cd0",
+    "region": "NSW1",
+    "date": "2026-09-15",
+    "intervals": 288,
+    "first_period_end": "2026-09-15T00:05:00",
+    "last_period_end": "2026-09-16T00:00:00",
+    "hours": 24,
+    "time_basis": "NEM market time (AEST, UTC+10, no daylight saving)"
+  },
+  "generator_configurations": 432,
+  "physical_stations": 414,
+  "connectors": 1656,
+  "hourly_prices": 10368,
+  "charging_sessions": 4021,
+  "meter_events": 121800,
+  "sessions_by_site_type": {
+    "urban": 2718,
+    "regional": 1303
+  },
+  "sessions_ending_after_generation_day": 29,
+  "last_session_end": "2026-09-16T01:15:41",
+  "price_min": 0.4,
+  "price_max": 0.92,
+  "session_count_note": "4,266 is a nominal rate calculation, not a fixed assertion; actual stochastic count is reported unchanged.",
+  "meter_energy_rounding_tolerance_kwh": 0.0055,
+  "checks": [
+    "complete_aemo_day",
+    "input_and_metadata_mapping",
+    "generated_station_metadata",
+    "hourly_price_coverage_and_uniqueness",
+    "aemo_and_dynamic_price_formula",
+    "session_ids_and_foreign_keys",
+    "connector_range_and_nonoverlap",
+    "session_timing_energy_cost",
+    "meter_session_identity",
+    "complete_ordered_minute_meters",
+    "monotone_energy_and_soc",
+    "final_meter_energy_and_duration"
+  ],
+  "outputs": {
+    "stations.csv": {
+      "bytes": 60217,
+      "sha256": "8393787a54226decd4b25d351bb52895211922302c63f8c0b0eb6b7a2a3ae83e"
+    },
+    "prices_hourly.csv": {
+      "bytes": 1058073,
+      "sha256": "4bd7fb3a9358bfb83b01a9955a7346d3d74caf02dfd334445a6ac8a31e82bdde"
+    },
+    "sessions.csv": {
+      "bytes": 1073991,
+      "sha256": "ed4a6f66614be2f35d874fce86447667f22f8dde37139dca56ca3f33450c24f2"
+    },
+    "session_metering.csv": {
+      "bytes": 25717065,
+      "sha256": "b81f84103a08db7c14b1a96fd09fca48ba77528a41dbab8495a9cc0e365cc78c"
+    }
+  }
+}

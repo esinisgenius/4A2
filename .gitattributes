@@ -1,0 +1,3 @@
+# Preserve the exact Task 1 output/cache bytes recorded in the SHA-256 manifest.
+data/generated/** binary
+logs/task1_generation.log binary

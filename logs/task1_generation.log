@@ -1,0 +1,10 @@
+COMMAND ["C:\\Users\\LL\\AppData\\Local\\Programs\\Python\\Python312\\python.exe", "vendor/data_generator/generate_dataset.py", "--stations", "data/input/stations.csv", "--start", "2026-09-15", "--days", "1", "--out", "data/generated", "--seed", "5339", "--sessions-per-connector-day", "3", "2"]
+
+STDOUT
+432 stations, 10368 hourly prices, 4021 charging-sessions, 121800 meter-events -> data/generated/
+  urban    mean  31.7 min /  25.4 kWh   (ARENA 2023: 27.3 min / 27.0 kWh)
+  regional mean  27.3 min /  25.0 kWh   (ARENA 2023: 25.9 min / 24.5 kWh)
+  price $/kWh min 0.40  mean 0.67  max 0.92
+
+STDERR
+

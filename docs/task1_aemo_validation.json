@@ -1,0 +1,12 @@
+{
+  "result": "PASS",
+  "source_url": "https://www.aemo.com.au/aemo/data/nem/priceanddemand/PRICE_AND_DEMAND_202609_NSW1.csv",
+  "sha256": "85af3e1f68823c3eef87fcc98e5fa605c609b568ec64d6ef36b96722f8db8cd0",
+  "region": "NSW1",
+  "date": "2026-09-15",
+  "intervals": 288,
+  "first_period_end": "2026-09-15T00:05:00",
+  "last_period_end": "2026-09-16T00:00:00",
+  "hours": 24,
+  "time_basis": "NEM market time (AEST, UTC+10, no daylight saving)"
+}
