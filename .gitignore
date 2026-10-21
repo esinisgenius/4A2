@@ -1,0 +1,30 @@
+# macOS and editor metadata
+.DS_Store
+**/.DS_Store
+.Rhistory
+.idea/
+.vscode/
+*.swp
+*~
+
+# Python environments and caches
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.venv/
+venv/
+
+# Secrets and local configuration
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+
+# Temporary files and local logs
+*.tmp
+*.log
+logs/*
+
+# Regenerable AEMO download cache
+data/generated/aemo_cache/

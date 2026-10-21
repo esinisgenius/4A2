@@ -1,0 +1,11 @@
+{
+  "generator_input_rows": 432,
+  "excluded_dc_configurations": 1,
+  "urban_rows": 282,
+  "regional_rows": 150,
+  "connectors": 1656,
+  "one_day_hourly_price_rows": 10368,
+  "nominal_sessions_at_3_2_rates": 4266,
+  "input_path": "data/input/stations.csv",
+  "generator_station_id_semantics": "A1 charger_id; map to physical station with generator_station_mapping.csv"
+}

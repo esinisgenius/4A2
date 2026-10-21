@@ -1,0 +1,74 @@
+{
+  "result": "PASS",
+  "stations": 1885,
+  "chargers": 1958,
+  "dc_chargers": 433,
+  "missing_effective_power": 22,
+  "stations_with_verified_connectors": 214,
+  "checks": [
+    {
+      "check": "station_id_unique",
+      "status": "PASS",
+      "observed": 1885
+    },
+    {
+      "check": "charger_id_unique",
+      "status": "PASS",
+      "observed": 1958
+    },
+    {
+      "check": "charger_station_fk",
+      "status": "PASS",
+      "observed": 1885
+    },
+    {
+      "check": "all_stations_referenced",
+      "status": "PASS",
+      "observed": 1885
+    },
+    {
+      "check": "coordinates_valid",
+      "status": "PASS",
+      "observed": 1885
+    },
+    {
+      "check": "station_names_present",
+      "status": "PASS",
+      "observed": 0
+    },
+    {
+      "check": "addresses_present",
+      "status": "PASS",
+      "observed": 0
+    },
+    {
+      "check": "operators_present",
+      "status": "PASS",
+      "observed": 0
+    },
+    {
+      "check": "plug_counts_positive",
+      "status": "PASS",
+      "observed": 0
+    },
+    {
+      "check": "effective_power_reasonable",
+      "status": "PASS",
+      "observed": 0
+    },
+    {
+      "check": "connector_types_only_verified",
+      "status": "PASS",
+      "observed": 231
+    },
+    {
+      "check": "database_counts_match_csv",
+      "status": "PASS",
+      "observed": {
+        "stations": 1885,
+        "chargers": 1958,
+        "connector_types": 344
+      }
+    }
+  ]
+}

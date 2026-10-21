@@ -1,0 +1,11 @@
+{
+  "stations": 1885,
+  "chargers": 1958,
+  "dc_chargers": 433,
+  "synthetic_station_names": 1376,
+  "operator_alias_rows_changed": 170,
+  "chargers_with_effective_power": 1936,
+  "chargers_without_effective_power": 22,
+  "stations_with_verified_connector_types": 214,
+  "database": "database/charger_metadata.duckdb"
+}

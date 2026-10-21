@@ -1,0 +1,415 @@
+site_id,status,ocm_id,distance_m,score,connector_types,source_url,reason
+site_00069cee8d5ac31061de,matched,191163,51.3,0.5838,CCS (Type 2); CHAdeMO,https://openchargemap.org/site/poi/details/191163,matched_by_location_address_operator
+site_00b55e93efb580073c6d,unmatched,,,,,,no_eligible_poi_with_connector_type
+site_01572ff5cef5a71895bf,unmatched,,,,,,no_eligible_poi_with_connector_type
+site_01b66d430a29f247f980,unmatched,,,,,,no_eligible_poi_with_connector_type
+site_02c3e641ac8edce4f171,matched,272624,79.77,0.4764,CCS (Type 2),https://openchargemap.org/site/poi/details/272624,matched_by_location_address_operator
+site_042369794ba79d928e28,unmatched,,,,,,no_eligible_poi_with_connector_type
+site_044a104518eda618f98d,matched,272630,14.6,0.8157,CCS (Type 2); CHAdeMO,https://openchargemap.org/site/poi/details/272630,matched_by_location_address_operator
+site_050103afdd15f6012f7e,unmatched,,,,,,no_eligible_poi_with_connector_type
+site_063752074a4dad67c04c,unmatched,,,,,,no_eligible_poi_with_connector_type
+site_074d8d6483b1aa14b32a,unmatched,,,,,,no_eligible_poi_with_connector_type
+site_077837ceb6e9e9dcc0f5,unmatched,,,,,,no_eligible_poi_with_connector_type
+site_07c56a0892a26abc934c,unmatched,,,,,,no_eligible_poi_with_connector_type
+site_081a24a3c68b9da22aaf,unmatched,,,,,,no_eligible_poi_with_connector_type
+site_088d6ee0cd1f804bcdd0,unmatched,,,,,,no_eligible_poi_with_connector_type
+site_094e784626b8cae194d2,matched,190392,29.29,0.6503,CCS (Type 2); CHAdeMO,https://openchargemap.org/site/poi/details/190392,matched_by_location_address_operator
+site_09ae5192f2a88789aca1,unmatched,,,,,,no_eligible_poi_with_connector_type
+site_09f8b9f802da64027c1b,matched,265390,18.34,0.7884,CCS (Type 2); CHAdeMO,https://openchargemap.org/site/poi/details/265390,matched_by_location_address_operator
+site_0a15830c7256ab40807d,unmatched,,,,,,no_eligible_poi_with_connector_type
+site_0a60c9a8e43706cf12f0,unmatched,,,,,,no_eligible_poi_with_connector_type
+site_0a8ff278bd216e45bb28,unmatched,,,,,,no_eligible_poi_with_connector_type
+site_0af2048d81d37e2297a5,unmatched,,,,,,no_eligible_poi_with_connector_type
+site_0c1a6322e8ffb88e8785,unmatched,,,,,,no_eligible_poi_with_connector_type
+site_0d569975e1334468969d,unmatched,,,,,,no_eligible_poi_with_connector_type
+site_0dd5c9696151c850d216,unmatched,,,,,,no_eligible_poi_with_connector_type
+site_0eabf39bfbcd55e8e927,unmatched,,,,,,no_eligible_poi_with_connector_type
+site_0f108dcc2850c400c1c4,unmatched,,,,,,no_eligible_poi_with_connector_type
+site_0f6e78618178e8cab631,matched,306016,18.58,0.7202,CCS (Type 2); CHAdeMO,https://openchargemap.org/site/poi/details/306016,matched_by_location_address_operator
+site_119e47cb5f21ad917d3f,unmatched,,,,,,no_eligible_poi_with_connector_type
+site_11b0de5f5fb5b83dba2e,matched,190224,63.36,0.4748,CCS (Type 2); CHAdeMO,https://openchargemap.org/site/poi/details/190224,matched_by_location_address_operator
+site_1206102e21f9752d86a5,unmatched,,,,,,no_eligible_poi_with_connector_type
+site_1296bca8ea1d6309358e,matched,272632,14.64,0.8153,CCS (Type 2); CHAdeMO,https://openchargemap.org/site/poi/details/272632,matched_by_location_address_operator
+site_12f5c3ae503b6eba251b,unmatched,,,,,,no_eligible_poi_with_connector_type
+site_13cb96dd8226a06a735a,matched,148545,26.25,0.7439,CCS (Type 2); CHAdeMO,https://openchargemap.org/site/poi/details/148545,matched_by_location_address_operator
+site_140d354b8a0342e1bda3,unmatched,,,,,,no_eligible_poi_with_connector_type
+site_1454318b41e06b8d6ce5,matched,190670,27.4,0.7386,CCS (Type 2); CHAdeMO,https://openchargemap.org/site/poi/details/190670,matched_by_location_address_operator
+site_14e5768f9870c5b03657,unmatched,,,,,,no_eligible_poi_with_connector_type
+site_152532316c9bd00e89f8,unmatched,,,,,,no_eligible_poi_with_connector_type
+site_15c87b4cc57b6919f235,unmatched,,,,,,no_eligible_poi_with_connector_type
+site_16cebce8483240cecaa0,unmatched,,,,,,no_eligible_poi_with_connector_type
+site_17c8979cf4489e5622e8,unmatched,,,,,,no_eligible_poi_with_connector_type
+site_185eb6911bd250097f7e,unmatched,,,,,,no_eligible_poi_with_connector_type
+site_18b15fcdef0a840bad71,unmatched,,,,,,no_eligible_poi_with_connector_type
+site_18df4e34138226f3a7e2,unmatched,,,,,,no_eligible_poi_with_connector_type
+site_199edfa40c0f71ae1b1f,unmatched,,,,,,no_eligible_poi_with_connector_type
+site_1b281521e560587d241b,unmatched,,,,,,no_eligible_poi_with_connector_type
+site_1b8cc032b745c57c894a,unmatched,,,,,,no_eligible_poi_with_connector_type
+site_1c6540e4989801398e5c,unmatched,,,,,,no_eligible_poi_with_connector_type
+site_1cd82f1a426907499029,matched,172919,23.65,0.7569,CCS (Type 2); CHAdeMO,https://openchargemap.org/site/poi/details/172919,matched_by_location_address_operator
+site_1dbb4e06783e50884298,matched,306014,73.21,0.4673,CCS (Type 2),https://openchargemap.org/site/poi/details/306014,matched_by_location_address_operator
+site_1e0d34563361207d4198,unmatched,,,,,,no_eligible_poi_with_connector_type
+site_1e5df69a530e81335672,unmatched,,,,,,no_eligible_poi_with_connector_type
+site_1f4774b4cd34b471a6d9,matched,273225,10.75,0.8497,CCS (Type 2); CHAdeMO,https://openchargemap.org/site/poi/details/273225,matched_by_location_address_operator
+site_1fc11c798d8829cfee1b,matched,272634,37.97,0.5785,CCS (Type 2); CHAdeMO,https://openchargemap.org/site/poi/details/272634,matched_by_location_address_operator
+site_1fc4387d21052ab1e554,matched,154488,7.72,0.8154,CCS (Type 2); CHAdeMO,https://openchargemap.org/site/poi/details/154488,matched_by_location_address_operator
+site_1fede67c95b45aee011a,unmatched,,,,,,no_eligible_poi_with_connector_type
+site_1ff3565a42f52d2e1284,unmatched,,,,,,no_eligible_poi_with_connector_type
+site_2145c37685de6c0a5685,unmatched,,,,,,no_eligible_poi_with_connector_type
+site_2153b916708bac9bbe8b,matched,307990,43.75,0.6151,CCS (Type 2),https://openchargemap.org/site/poi/details/307990,matched_by_location_address_operator
+site_21a817fc7b248f3c7d69,unmatched,,,,,,no_eligible_poi_with_connector_type
+site_220025285149a91337c3,unmatched,,,,,,no_eligible_poi_with_connector_type
+site_23487c24f5f15b793890,unmatched,,,,,,no_eligible_poi_with_connector_type
+site_24005782ff13d4f86d76,unmatched,,,,,,no_eligible_poi_with_connector_type
+site_24e1939c7cda711c00a9,unmatched,,,,,,no_eligible_poi_with_connector_type
+site_252a1a034d099e201328,unmatched,,,,,,no_eligible_poi_with_connector_type
+site_27d505ce401d073a5025,matched,190671,20.86,0.7725,CCS (Type 2); CHAdeMO,https://openchargemap.org/site/poi/details/190671,matched_by_location_address_operator
+site_27e85b4f4d2b63f73689,unmatched,,,,,,no_eligible_poi_with_connector_type
+site_288ebeb9af14c8baf509,unmatched,,,,,,no_eligible_poi_with_connector_type
+site_2915977d24658f816bcc,matched,295979,23.48,0.6079,CCS (Type 2); CHAdeMO,https://openchargemap.org/site/poi/details/295979,matched_by_location_address_operator
+site_29171de207627f67d4b7,unmatched,,,,,,no_eligible_poi_with_connector_type
+site_29c328da6038900b2871,unmatched,,,,,,no_eligible_poi_with_connector_type
+site_29ecf4b12514cf5e85aa,unmatched,,,,,,no_eligible_poi_with_connector_type
+site_2addc35b7d35805f076d,unmatched,,,,,,no_eligible_poi_with_connector_type
+site_2b40ec57bb635a6190bf,unmatched,,,,,,no_eligible_poi_with_connector_type
+site_2cfd86bb398b5f6b78fa,matched,190875,17.96,0.711,CCS (Type 2); CHAdeMO,https://openchargemap.org/site/poi/details/190875,matched_by_location_address_operator
+site_2e6947ddc5056cf9327c,unmatched,,,,,,no_eligible_poi_with_connector_type
+site_2f21577c80c39b2b140c,unmatched,,,,,,no_eligible_poi_with_connector_type
+site_2f34b67532056f930238,unmatched,,,,,,no_eligible_poi_with_connector_type
+site_2fa18f139588c55e3045,unmatched,,,,,,no_eligible_poi_with_connector_type
+site_2fcd4ca546134be8ae27,matched,156010,89.38,0.6093,CCS (Type 2); CHAdeMO,https://openchargemap.org/site/poi/details/156010,matched_by_location_address_operator
+site_2ff9efb1bf9c6191c568,unmatched,,,,,,no_eligible_poi_with_connector_type
+site_30db6435b043453ba564,unmatched,,,,,,no_eligible_poi_with_connector_type
+site_31deced8c52a55bfa39f,unmatched,,,,,,no_eligible_poi_with_connector_type
+site_324e7ef5d04aa9ba8660,unmatched,,,,,,no_eligible_poi_with_connector_type
+site_325eb6e99b8c805f7559,unmatched,,,,,,no_eligible_poi_with_connector_type
+site_32d937c07484cbfe1ac8,unmatched,,,,,,no_eligible_poi_with_connector_type
+site_3435de745e6ccc4abc24,unmatched,,,,,,no_eligible_poi_with_connector_type
+site_34dd4f97aa8b682c5d06,unmatched,,,,,,no_eligible_poi_with_connector_type
+site_350df8e8830946ab4608,unmatched,,,,,,no_eligible_poi_with_connector_type
+site_35475bcaccf37cf38129,unmatched,,,,,,no_eligible_poi_with_connector_type
+site_36745181f0b3e0b2f5e0,unmatched,,,,,,no_eligible_poi_with_connector_type
+site_3722d5fbc1410703f7b9,unmatched,,,,,,no_eligible_poi_with_connector_type
+site_375411f92eb5ee75ef6c,unmatched,,,,,,no_eligible_poi_with_connector_type
+site_3917414a34962fe9b24e,matched,272686,14.93,0.713,CCS (Type 2); CHAdeMO,https://openchargemap.org/site/poi/details/272686,matched_by_location_address_operator
+site_3972e5f7367d0f0f652d,matched,161843,9.27,0.7448,CCS (Type 2); CHAdeMO,https://openchargemap.org/site/poi/details/161843,matched_by_location_address_operator
+site_3af04d4c1db987555718,unmatched,,,,,,no_eligible_poi_with_connector_type
+site_3b4e3f368a0e68005247,unmatched,,,,,,no_eligible_poi_with_connector_type
+site_3c09ea5bac804a41e054,unmatched,,,,,,no_eligible_poi_with_connector_type
+site_3c43599762269b583162,matched,191956,23.08,0.6266,CCS (Type 2); CHAdeMO,https://openchargemap.org/site/poi/details/191956,matched_by_location_address_operator
+site_3c7831213e9df470d957,unmatched,,,,,,no_eligible_poi_with_connector_type
+site_3c802ada4b08816093b1,unmatched,,,,,,no_eligible_poi_with_connector_type
+site_3cc7d06da960c70db02b,unmatched,,,,,,no_eligible_poi_with_connector_type
+site_3d4378c2c087821b3255,unmatched,,,,,,no_eligible_poi_with_connector_type
+site_3e627defd90fe8ebcdef,matched,190003,8.51,0.873,CCS (Type 2); CHAdeMO,https://openchargemap.org/site/poi/details/190003,matched_by_location_address_operator
+site_3eb4ea3b993613823bf9,unmatched,,,,,,no_eligible_poi_with_connector_type
+site_3f18d93f606cedf44fa1,unmatched,,,,,,no_eligible_poi_with_connector_type
+site_3fdaf1b7be2410fc5c81,unmatched,,,,,,no_eligible_poi_with_connector_type
+site_3ff6ab0c5f20fb5805bd,unmatched,,,,,,no_eligible_poi_with_connector_type
+site_4072613a9192721afc7d,unmatched,,,,,,no_eligible_poi_with_connector_type
+site_40f7cf55d3b46f016703,unmatched,,,,,,no_eligible_poi_with_connector_type
+site_415ffeceed803454111f,unmatched,,,,,,no_eligible_poi_with_connector_type
+site_4180ef78167e14018309,unmatched,,,,,,no_eligible_poi_with_connector_type
+site_418d641a0d242c700caa,unmatched,,,,,,no_eligible_poi_with_connector_type
+site_4256500e6d8970c99166,matched,273220,31.19,0.7225,CCS (Type 2); CHAdeMO,https://openchargemap.org/site/poi/details/273220,matched_by_location_address_operator
+site_42f244a8cb3de804eef2,matched,190669,34.06,0.6317,CCS (Type 2); CHAdeMO,https://openchargemap.org/site/poi/details/190669,matched_by_location_address_operator
+site_431ba154435b83e069d6,matched,191062,15.67,0.7073,CCS (Type 2),https://openchargemap.org/site/poi/details/191062,matched_by_location_address_operator
+site_4568473a2c0cf6f8449c,unmatched,,,,,,no_eligible_poi_with_connector_type
+site_45abe118ee215284246b,unmatched,,,,,,no_eligible_poi_with_connector_type
+site_45ec5ca9cf1e6a0893a4,matched,272700,82.95,0.6158,CCS (Type 2); CHAdeMO,https://openchargemap.org/site/poi/details/272700,matched_by_location_address_operator
+site_45fe2f6b330d3ab5cce3,unmatched,,,,,,no_eligible_poi_with_connector_type
+site_466c3a3e7173bbb03127,matched,190005,22.81,0.5614,CCS (Type 2); CHAdeMO,https://openchargemap.org/site/poi/details/190005,matched_by_location_address_operator
+site_46704e924ad04fc93b53,matched,190861,6.24,0.7751,CCS (Type 2); CHAdeMO,https://openchargemap.org/site/poi/details/190861,matched_by_location_address_operator
+site_48db830805f5ef2a1ffc,unmatched,,,,,,no_eligible_poi_with_connector_type
+site_4936ef443052aa0a63c8,unmatched,,,,,,no_eligible_poi_with_connector_type
+site_4a352c0f4f4fd8dea658,unmatched,,,,,,no_eligible_poi_with_connector_type
+site_4a73ab460a6eb468b29f,unmatched,,,,,,no_eligible_poi_with_connector_type
+site_4aecd2fbf890bc9992a2,unmatched,,,,,,no_eligible_poi_with_connector_type
+site_4b0d90e6f945ecbf05bd,unmatched,,,,,,no_eligible_poi_with_connector_type
+site_4b6732c9dbe0f051301e,unmatched,,,,,,no_eligible_poi_with_connector_type
+site_4bac3db4074cf0e64daf,unmatched,,,,,,no_eligible_poi_with_connector_type
+site_4ca411ee32c60b877c97,matched,191394,4.72,0.8206,CCS (Type 2); CHAdeMO,https://openchargemap.org/site/poi/details/191394,matched_by_location_address_operator
+site_4d99b96e769c5533bdbe,unmatched,,,,,,no_eligible_poi_with_connector_type
+site_4dc692bb24443463d660,matched,191958,10.79,0.6893,CCS (Type 2); CHAdeMO,https://openchargemap.org/site/poi/details/191958,matched_by_location_address_operator
+site_4de17fa4681ce5e690ca,unmatched,,,,,,no_eligible_poi_with_connector_type
+site_4de18212e5216d57feab,unmatched,,,,,,no_eligible_poi_with_connector_type
+site_4e6f740af19341a16483,unmatched,,,,,,no_eligible_poi_with_connector_type
+site_517f4092aa8fd6692600,unmatched,,,,,,no_eligible_poi_with_connector_type
+site_521173d78defbdc22ea2,unmatched,,,,,,no_eligible_poi_with_connector_type
+site_53498c5232f2504f9cd9,unmatched,,,,,,no_eligible_poi_with_connector_type
+site_542c24fc63d67d21f560,unmatched,,,,,,no_eligible_poi_with_connector_type
+site_55a5e75323b49d4debaf,unmatched,,,,,,no_eligible_poi_with_connector_type
+site_56612678b65d6d4de9e1,unmatched,,,,,,no_eligible_poi_with_connector_type
+site_56bee36da7e2594925f3,matched,131610,5.91,0.8244,CCS (Type 2),https://openchargemap.org/site/poi/details/131610,matched_by_location_address_operator
+site_56cdaf5a711b7d187ca5,unmatched,,,,,,no_eligible_poi_with_connector_type
+site_57624d5ae90423024471,unmatched,,,,,,no_eligible_poi_with_connector_type
+site_57733fc82913af14f2ab,matched,172652,10.59,0.7512,CCS (Type 2); CHAdeMO,https://openchargemap.org/site/poi/details/172652,matched_by_location_address_operator
+site_57b79b1e5fbbb1deb333,unmatched,,,,,,no_eligible_poi_with_connector_type
+site_57dff22f9a71b5866705,unmatched,,,,,,no_eligible_poi_with_connector_type
+site_588af26af59dded9724b,unmatched,,,,,,no_eligible_poi_with_connector_type
+site_5899805af6f78b977c5d,unmatched,,,,,,no_eligible_poi_with_connector_type
+site_592bbffc8ee8315f22aa,unmatched,,,,,,no_eligible_poi_with_connector_type
+site_593e84fd7180f3b905d1,unmatched,,,,,,no_eligible_poi_with_connector_type
+site_5bb2b0598aed8e015bfc,unmatched,,,,,,no_eligible_poi_with_connector_type
+site_5c50b1e6bf569805be7d,unmatched,,,,,,no_eligible_poi_with_connector_type
+site_5c5fd43c1575d59b1484,unmatched,,,,,,no_eligible_poi_with_connector_type
+site_5c66fd63dd4e71b7ee95,unmatched,,,,,,no_eligible_poi_with_connector_type
+site_5cb27548e4d9b109165e,unmatched,,,,,,no_eligible_poi_with_connector_type
+site_5ce9e014c1a75163a287,unmatched,,,,,,no_eligible_poi_with_connector_type
+site_5e0c674fcc616d4ec201,unmatched,,,,,,no_eligible_poi_with_connector_type
+site_6012208fe66b89ef36cb,matched,191955,15.76,0.8067,CCS (Type 2); CHAdeMO,https://openchargemap.org/site/poi/details/191955,matched_by_location_address_operator
+site_60888285720c717dbd42,unmatched,,,,,,no_eligible_poi_with_connector_type
+site_60cf0269220183044b22,unmatched,,,,,,no_eligible_poi_with_connector_type
+site_60e0099c26fed9d06e53,unmatched,,,,,,no_eligible_poi_with_connector_type
+site_60e279e5b98ba195dd85,unmatched,,,,,,no_eligible_poi_with_connector_type
+site_61678698549e995c9f5b,matched,266586,12.6,0.8325,CCS (Type 2); CHAdeMO,https://openchargemap.org/site/poi/details/266586,matched_by_location_address_operator
+site_61a9315fdcaf845058c4,unmatched,,,,,,no_eligible_poi_with_connector_type
+site_624ac4a026782848d464,unmatched,,,,,,no_eligible_poi_with_connector_type
+site_625f23a5c4d71443453b,unmatched,,,,,,no_eligible_poi_with_connector_type
+site_631d9c0a06d8ef609859,unmatched,,,,,,no_eligible_poi_with_connector_type
+site_6331dfd76fc248d6f707,unmatched,,,,,,no_eligible_poi_with_connector_type
+site_633e6aa5140882d369fd,unmatched,,,,,,no_eligible_poi_with_connector_type
+site_63f998068a7b89aab21f,unmatched,,,,,,no_eligible_poi_with_connector_type
+site_65b783a666907396e4f6,unmatched,,,,,,no_eligible_poi_with_connector_type
+site_661f3a0f2d18e280d55b,unmatched,,,,,,no_eligible_poi_with_connector_type
+site_66375b4c003e44d6c7e9,unmatched,,,,,,no_eligible_poi_with_connector_type
+site_66bebcf7604afd4931e1,unmatched,,,,,,no_eligible_poi_with_connector_type
+site_6718a61b8c04f5ee07aa,unmatched,,,,,,no_eligible_poi_with_connector_type
+site_67a0060014d88e67de57,unmatched,,,,,,no_eligible_poi_with_connector_type
+site_686c14a0d8c4d0c770b7,matched,272620,0.07,0.8986,CCS (Type 2),https://openchargemap.org/site/poi/details/272620,matched_by_location_address_operator
+site_68c317928d091cf2e22e,unmatched,,,,,,no_eligible_poi_with_connector_type
+site_68c605cbd5ca894fd51f,unmatched,,,,,,no_eligible_poi_with_connector_type
+site_68ef18a783ce77fcf026,unmatched,,,,,,no_eligible_poi_with_connector_type
+site_6984410459aff55f03f7,unmatched,,,,,,no_eligible_poi_with_connector_type
+site_69d742efbad5851b2724,unmatched,,,,,,no_eligible_poi_with_connector_type
+site_6ac69dfe7b77dbb15326,matched,238124,7.34,0.8008,CCS (Type 2); CHAdeMO,https://openchargemap.org/site/poi/details/238124,matched_by_location_address_operator
+site_6f889011967ab784585d,unmatched,,,,,,no_eligible_poi_with_connector_type
+site_6fc68c36794c76006423,unmatched,,,,,,no_eligible_poi_with_connector_type
+site_7033d449beccdc8ff090,unmatched,,,,,,no_eligible_poi_with_connector_type
+site_70ac5587016356623ffd,unmatched,,,,,,no_eligible_poi_with_connector_type
+site_713a160ab4e954d9b8e0,unmatched,,,,,,no_eligible_poi_with_connector_type
+site_714919f8b03b3a07e45f,unmatched,,,,,,no_eligible_poi_with_connector_type
+site_717bdd39efe79162910a,unmatched,,,,,,no_eligible_poi_with_connector_type
+site_71bb9de78f06d8863ae2,matched,306015,55.28,0.5057,CCS (Type 2),https://openchargemap.org/site/poi/details/306015,matched_by_location_address_operator
+site_72273b7ceaf9d5ed366f,unmatched,,,,,,no_eligible_poi_with_connector_type
+site_72808cd39f03a23be49e,unmatched,,,,,,no_eligible_poi_with_connector_type
+site_744eb724e869de8d31c1,matched,272633,31.1,0.6562,CCS (Type 2); CHAdeMO,https://openchargemap.org/site/poi/details/272633,matched_by_location_address_operator
+site_75b29234de7062a7e6b8,matched,272784,35.12,0.6079,CCS (Type 2),https://openchargemap.org/site/poi/details/272784,matched_by_location_address_operator
+site_773884160a6115d75148,unmatched,,,,,,no_eligible_poi_with_connector_type
+site_7745687814235f8a3f9b,unmatched,,,,,,no_eligible_poi_with_connector_type
+site_7815542ca9e1988e985e,unmatched,,,,,,no_eligible_poi_with_connector_type
+site_792961fda4f97ada60b9,matched,172920,27.85,0.6365,CCS (Type 2); CHAdeMO,https://openchargemap.org/site/poi/details/172920,matched_by_location_address_operator
+site_79c3c5382fdfcf258313,matched,266499,0.55,0.9093,CCS (Type 2); CHAdeMO,https://openchargemap.org/site/poi/details/266499,matched_by_location_address_operator
+site_7a132597d923872406f4,matched,312659,37.03,0.5415,CCS (Type 2),https://openchargemap.org/site/poi/details/312659,matched_by_location_address_operator
+site_7a375bf81b1299c34640,unmatched,,,,,,no_eligible_poi_with_connector_type
+site_7a375e53bfc02127102f,unmatched,,,,,,no_eligible_poi_with_connector_type
+site_7b77c6d403eb967fc609,unmatched,,,,,,no_eligible_poi_with_connector_type
+site_7b913617d856b3c059c1,matched,190351,4.59,0.9224,CCS (Type 2); CHAdeMO,https://openchargemap.org/site/poi/details/190351,matched_by_location_address_operator
+site_7d30c1d10649bb74b1af,unmatched,,,,,,no_eligible_poi_with_connector_type
+site_7d355d7c27e9a958657d,unmatched,,,,,,no_eligible_poi_with_connector_type
+site_7df19411c41ca20555f0,unmatched,,,,,,no_eligible_poi_with_connector_type
+site_7e2dac0a02464c44f66a,unmatched,,,,,,no_eligible_poi_with_connector_type
+site_7e583a251536194c314b,unmatched,,,,,,no_eligible_poi_with_connector_type
+site_7f2fbd9fccd461330b76,unmatched,,,,,,no_eligible_poi_with_connector_type
+site_7f998a957e239a35e0bb,unmatched,,,,,,no_eligible_poi_with_connector_type
+site_80a171bcd7665a83ad5c,unmatched,,,,,,no_eligible_poi_with_connector_type
+site_82c9168a0c3d1dafc8b9,unmatched,,,,,,no_eligible_poi_with_connector_type
+site_82cc9bbf67dd1b453825,unmatched,,,,,,no_eligible_poi_with_connector_type
+site_8365d098caf8dbe6651f,matched,192929,5.72,0.7869,CCS (Type 2); CHAdeMO,https://openchargemap.org/site/poi/details/192929,matched_by_location_address_operator
+site_845071fb998e575b263b,unmatched,,,,,,no_eligible_poi_with_connector_type
+site_8520552e177bd257de15,unmatched,,,,,,no_eligible_poi_with_connector_type
+site_85cea26fc6206c5af51a,unmatched,,,,,,no_eligible_poi_with_connector_type
+site_85e1e7cad747047fd506,unmatched,,,,,,no_eligible_poi_with_connector_type
+site_872cf7cd2659ab19427d,unmatched,,,,,,no_eligible_poi_with_connector_type
+site_87d45a8c2aad95fb349c,unmatched,,,,,,no_eligible_poi_with_connector_type
+site_8868173523f0002f6f69,unmatched,,,,,,no_eligible_poi_with_connector_type
+site_88835925aa2cde9844af,unmatched,,,,,,no_eligible_poi_with_connector_type
+site_88c2734a731488b245ea,unmatched,,,,,,no_eligible_poi_with_connector_type
+site_8925b9a6b7049fbeaae0,unmatched,,,,,,no_eligible_poi_with_connector_type
+site_8a3ce89dc21723d71d34,unmatched,,,,,,no_eligible_poi_with_connector_type
+site_8abfa440a3f5946cfbae,unmatched,,,,,,no_eligible_poi_with_connector_type
+site_8b19d2cfe04883f21cdf,unmatched,,,,,,no_eligible_poi_with_connector_type
+site_8b238402ad101841a45d,matched,193048,28.55,0.5834,CCS (Type 2); CHAdeMO,https://openchargemap.org/site/poi/details/193048,matched_by_location_address_operator
+site_8b65aaa9e674e802b024,unmatched,,,,,,no_eligible_poi_with_connector_type
+site_8b8d7a7b82a60a197d79,unmatched,,,,,,no_eligible_poi_with_connector_type
+site_8c6c1485e5acad07a352,matched,191160,5.12,0.9151,CCS (Type 2); CHAdeMO,https://openchargemap.org/site/poi/details/191160,matched_by_location_address_operator
+site_8da2859cb478282fc533,unmatched,,,,,,no_eligible_poi_with_connector_type
+site_8e38bcb1326efe14775a,unmatched,,,,,,no_eligible_poi_with_connector_type
+site_8e5b35b00b728ac31117,unmatched,,,,,,no_eligible_poi_with_connector_type
+site_900bdd44f84ba38adde5,unmatched,,,,,,no_eligible_poi_with_connector_type
+site_9031dc0d38076553a0df,unmatched,,,,,,no_eligible_poi_with_connector_type
+site_90ed3a2949d5c8a0fe89,unmatched,,,,,,no_eligible_poi_with_connector_type
+site_916269c88f19730ba1ad,unmatched,,,,,,no_eligible_poi_with_connector_type
+site_917c1fa15f7f614c86e1,unmatched,,,,,,no_eligible_poi_with_connector_type
+site_91d7ac075e600f03f4c6,unmatched,,,,,,no_eligible_poi_with_connector_type
+site_924a54666e13b3204767,unmatched,,,,,,no_eligible_poi_with_connector_type
+site_9331215413428ec8d7ba,unmatched,,,,,,no_eligible_poi_with_connector_type
+site_9340e01d76a1a6ca6e69,unmatched,,,,,,no_eligible_poi_with_connector_type
+site_93fa05a47ab21c9dbe40,unmatched,,,,,,no_eligible_poi_with_connector_type
+site_9401f993bf4fc1aaac9f,unmatched,,,,,,no_eligible_poi_with_connector_type
+site_9470bf5b9833b89da3fe,unmatched,,,,,,no_eligible_poi_with_connector_type
+site_9492ce624fb39c48df99,unmatched,,,,,,no_eligible_poi_with_connector_type
+site_94b89325eadf4f913300,unmatched,,,,,,no_eligible_poi_with_connector_type
+site_94f586ed251254eb5cee,matched,191164,12.23,0.7358,CCS (Type 2); CHAdeMO,https://openchargemap.org/site/poi/details/191164,matched_by_location_address_operator
+site_952c7af000f9d0965771,unmatched,,,,,,no_eligible_poi_with_connector_type
+site_95ca55d06e39f5107a02,unmatched,,,,,,no_eligible_poi_with_connector_type
+site_95f3b49f5494172222f5,unmatched,,,,,,no_eligible_poi_with_connector_type
+site_96010c4d1a8bdfb3cedb,unmatched,,,,,,no_eligible_poi_with_connector_type
+site_96210a06cfbd4d3d7b8d,unmatched,,,,,,no_eligible_poi_with_connector_type
+site_9677584ec3ed3ac1010a,unmatched,,,,,,no_eligible_poi_with_connector_type
+site_9799f07fcb2bf8010c06,unmatched,,,,,,no_eligible_poi_with_connector_type
+site_97f5bfa0ccb7752bb691,unmatched,,,,,,no_eligible_poi_with_connector_type
+site_98f8588dda5b93d4e387,unmatched,,,,,,no_eligible_poi_with_connector_type
+site_98fe7dd936f22bf3b17c,unmatched,,,,,,no_eligible_poi_with_connector_type
+site_9b8f0808325817909ccc,unmatched,,,,,,no_eligible_poi_with_connector_type
+site_9ca24408f602c68ef7ea,unmatched,,,,,,no_eligible_poi_with_connector_type
+site_9ec858d698c09f65852d,unmatched,,,,,,no_eligible_poi_with_connector_type
+site_9ee6566294931c8caa35,unmatched,,,,,,no_eligible_poi_with_connector_type
+site_9f61ca5c9104ef2f60f3,unmatched,,,,,,no_eligible_poi_with_connector_type
+site_9fb5784ae88b65a93349,unmatched,,,,,,no_eligible_poi_with_connector_type
+site_a0256a1df499d6b4543e,unmatched,,,,,,no_eligible_poi_with_connector_type
+site_a0d3ce451becc12b2fb0,unmatched,,,,,,no_eligible_poi_with_connector_type
+site_a0f0f74a72d952f3a7c1,unmatched,,,,,,no_eligible_poi_with_connector_type
+site_a11a39992c347c21446a,unmatched,,,,,,no_eligible_poi_with_connector_type
+site_a1c308cb7f6af6aaf886,unmatched,,,,,,no_eligible_poi_with_connector_type
+site_a1ff4184c83f3379b497,unmatched,,,,,,no_eligible_poi_with_connector_type
+site_a34ec33b1ed485d37502,unmatched,,,,,,no_eligible_poi_with_connector_type
+site_a4302ae9c50ae933f0fa,unmatched,,,,,,no_eligible_poi_with_connector_type
+site_a6ceb8f85874526834f5,matched,209950,100.19,0.5498,CCS (Type 2); CHAdeMO,https://openchargemap.org/site/poi/details/209950,matched_by_location_address_operator
+site_a708186b5006220701d3,unmatched,,,,,,no_eligible_poi_with_connector_type
+site_a728a706ba5d080ed078,matched,191957,7.47,0.7517,CCS (Type 2); CHAdeMO,https://openchargemap.org/site/poi/details/191957,matched_by_location_address_operator
+site_a7d965c7f38b8392dfdf,matched,272496,47.2,0.5231,CCS (Type 2); CHAdeMO,https://openchargemap.org/site/poi/details/272496,matched_by_location_address_operator
+site_a8774e3d85c77235e393,unmatched,,,,,,no_eligible_poi_with_connector_type
+site_a94f743678efc0b3731d,unmatched,,,,,,no_eligible_poi_with_connector_type
+site_ab58f8a48db02f1e214a,matched,157566,12.91,0.8298,CCS (Type 2); CHAdeMO,https://openchargemap.org/site/poi/details/157566,matched_by_location_address_operator
+site_ab858ae789c3796f21c7,unmatched,,,,,,no_eligible_poi_with_connector_type
+site_ab9f325ad3935d1934a2,unmatched,,,,,,no_eligible_poi_with_connector_type
+site_abf3b69275bcf3837b25,unmatched,,,,,,no_eligible_poi_with_connector_type
+site_ac432f9039ab24f7466e,unmatched,,,,,,no_eligible_poi_with_connector_type
+site_ad2cf0ebd053142898f6,unmatched,,,,,,no_eligible_poi_with_connector_type
+site_ad8a9aa0e4a9c4392bdf,unmatched,,,,,,no_eligible_poi_with_connector_type
+site_adb72abf2fb46df5da15,unmatched,,,,,,no_eligible_poi_with_connector_type
+site_adc529b32c503244b4ab,matched,190358,30.2,0.6064,CCS (Type 2); CHAdeMO,https://openchargemap.org/site/poi/details/190358,matched_by_location_address_operator
+site_adf8cff790dbe5f4c497,unmatched,,,,,,no_eligible_poi_with_connector_type
+site_aec5e500b1a8a354822d,unmatched,,,,,,no_eligible_poi_with_connector_type
+site_aef663cabb4ebe83a9e2,unmatched,,,,,,no_eligible_poi_with_connector_type
+site_b0e59a8274d568ab2c59,unmatched,,,,,,no_eligible_poi_with_connector_type
+site_b3220acb523efe0256cf,matched,272689,5.47,0.7503,CCS (Type 2); CHAdeMO,https://openchargemap.org/site/poi/details/272689,matched_by_location_address_operator
+site_b328657ccdba92bb3afa,unmatched,,,,,,no_eligible_poi_with_connector_type
+site_b345f6e679b526339ae2,matched,272500,6.15,0.9013,CCS (Type 2); CHAdeMO,https://openchargemap.org/site/poi/details/272500,matched_by_location_address_operator
+site_b3e5e3f2659b2288cade,unmatched,,,,,,no_eligible_poi_with_connector_type
+site_b457dfca659dac7e4bb1,unmatched,,,,,,no_eligible_poi_with_connector_type
+site_b4af146381e497ae4a7c,unmatched,,,,,,no_eligible_poi_with_connector_type
+site_b4c9edb801bef608836b,unmatched,,,,,,no_eligible_poi_with_connector_type
+site_b5b2d0d6c472879120df,unmatched,,,,,,no_eligible_poi_with_connector_type
+site_b6fc4ba2d7dde427174f,unmatched,,,,,,no_eligible_poi_with_connector_type
+site_b732c33adb86a12c393b,unmatched,,,,,,no_eligible_poi_with_connector_type
+site_b772075782952c86e46e,unmatched,,,,,,no_eligible_poi_with_connector_type
+site_b87ae15cb3b64d6f5baf,unmatched,,,,,,no_eligible_poi_with_connector_type
+site_b996c6db1a2f59dce9a4,unmatched,,,,,,no_eligible_poi_with_connector_type
+site_ba36bea3be65a67f5d95,unmatched,,,,,,no_eligible_poi_with_connector_type
+site_ba992f47d3a74d4632c1,unmatched,,,,,,no_eligible_poi_with_connector_type
+site_bb159291c0a7f279048c,unmatched,,,,,,no_eligible_poi_with_connector_type
+site_bbc92313dbf85d032e06,matched,172852,15.5,0.6753,CCS (Type 2); CHAdeMO,https://openchargemap.org/site/poi/details/172852,matched_by_location_address_operator
+site_bca728f3e33dd1bbc4de,unmatched,,,,,,no_eligible_poi_with_connector_type
+site_bcb132b06af6e8a5e674,unmatched,,,,,,no_eligible_poi_with_connector_type
+site_bd774f2f6b28ff40df7f,unmatched,,,,,,no_eligible_poi_with_connector_type
+site_bda459f64b0b90f8096c,unmatched,,,,,,no_eligible_poi_with_connector_type
+site_be9d3dc791085f350f33,unmatched,,,,,,no_eligible_poi_with_connector_type
+site_bf00f853b9cfe84cf4e5,matched,190393,66.68,0.5697,CCS (Type 2); CHAdeMO,https://openchargemap.org/site/poi/details/190393,matched_by_location_address_operator
+site_bf27980713f722d90f32,unmatched,,,,,,no_eligible_poi_with_connector_type
+site_c02df4a6f3c599f9750b,unmatched,,,,,,no_eligible_poi_with_connector_type
+site_c325bf192e23b4db2e53,unmatched,,,,,,no_eligible_poi_with_connector_type
+site_c3327108bde567dbc60b,unmatched,,,,,,no_eligible_poi_with_connector_type
+site_c35180d651a820eda7ee,unmatched,,,,,,no_eligible_poi_with_connector_type
+site_c461a08268b29e9505cc,unmatched,,,,,,no_eligible_poi_with_connector_type
+site_c51a40e2f14c392a3219,matched,191165,3.71,0.8687,CCS (Type 2); CHAdeMO,https://openchargemap.org/site/poi/details/191165,matched_by_location_address_operator
+site_c5f1f026b1395cf164d7,unmatched,,,,,,no_eligible_poi_with_connector_type
+site_c6e4697fb74ddb65c2e1,unmatched,,,,,,no_eligible_poi_with_connector_type
+site_c723e9b8e26b551e2ae8,unmatched,,,,,,no_eligible_poi_with_connector_type
+site_c84328d4088788667174,unmatched,,,,,,no_eligible_poi_with_connector_type
+site_c852f680e6d53cd9811d,unmatched,,,,,,no_eligible_poi_with_connector_type
+site_c99b0b8ef410d06f3d55,unmatched,,,,,,no_eligible_poi_with_connector_type
+site_cac5e995f7b3080431f8,unmatched,,,,,,no_eligible_poi_with_connector_type
+site_cb3c47ed49963f31ca78,unmatched,,,,,,no_eligible_poi_with_connector_type
+site_cb7bdc987879461c902d,unmatched,,,,,,no_eligible_poi_with_connector_type
+site_cb8d93d6a86ba29fa44b,unmatched,,,,,,no_eligible_poi_with_connector_type
+site_cbaa4421588ccdbc7d38,matched,272616,35.03,0.6082,CCS (Type 2); CHAdeMO,https://openchargemap.org/site/poi/details/272616,matched_by_location_address_operator
+site_cbdeb7e08a20f74d46d3,unmatched,,,,,,no_eligible_poi_with_connector_type
+site_cc3de28029416ceb4aff,matched,191162,71.25,0.5499,CCS (Type 2); CHAdeMO,https://openchargemap.org/site/poi/details/191162,matched_by_location_address_operator
+site_cd3685cd0017c42e4516,unmatched,,,,,,no_eligible_poi_with_connector_type
+site_cd5cb21e0842dba73401,unmatched,,,,,,no_eligible_poi_with_connector_type
+site_cf567fbec021221d4e06,unmatched,,,,,,no_eligible_poi_with_connector_type
+site_cfa8658de34675b6763e,matched,266872,67.86,0.5346,CCS (Type 2),https://openchargemap.org/site/poi/details/266872,matched_by_location_address_operator
+site_cfc50c082b68d9e69b92,unmatched,,,,,,no_eligible_poi_with_connector_type
+site_d01aff263af02ce179d2,unmatched,,,,,,no_eligible_poi_with_connector_type
+site_d06d5ff082b155fbc7e6,matched,161845,27.18,0.6062,CCS (Type 2); CHAdeMO,https://openchargemap.org/site/poi/details/161845,matched_by_location_address_operator
+site_d095b89ffc9037c4e791,unmatched,,,,,,no_eligible_poi_with_connector_type
+site_d0e26ca63bb394dab450,unmatched,,,,,,no_eligible_poi_with_connector_type
+site_d24dea071c84d1c78b63,unmatched,,,,,,no_eligible_poi_with_connector_type
+site_d2778963917a2671d416,unmatched,,,,,,no_eligible_poi_with_connector_type
+site_d2b1c0ff743fa2fb3021,unmatched,,,,,,no_eligible_poi_with_connector_type
+site_d4f304bdc0df695975a4,unmatched,,,,,,no_eligible_poi_with_connector_type
+site_d7b3c4d009c5604b7ac2,matched,191183,52.86,0.5406,CCS (Type 2); CHAdeMO,https://openchargemap.org/site/poi/details/191183,matched_by_location_address_operator
+site_d8dc66b0aaa1b0ae1169,unmatched,,,,,,no_eligible_poi_with_connector_type
+site_d929bfae49d907a5a4ac,matched,274144,75.52,0.5577,CCS (Type 2); CHAdeMO,https://openchargemap.org/site/poi/details/274144,matched_by_location_address_operator
+site_d9b35e32e37bf16d40c4,unmatched,,,,,,no_eligible_poi_with_connector_type
+site_d9f3d352907a0142a80d,unmatched,,,,,,no_eligible_poi_with_connector_type
+site_daf9c4c88d780cb66ad8,unmatched,,,,,,no_eligible_poi_with_connector_type
+site_dcbaa7cbed3a051aaf97,unmatched,,,,,,no_eligible_poi_with_connector_type
+site_de3f780d2576b866c1f9,matched,272635,13.88,0.7644,CCS (Type 2); CHAdeMO,https://openchargemap.org/site/poi/details/272635,matched_by_location_address_operator
+site_dec7cf97850ee34e0e98,matched,191161,14.32,0.6979,CCS (Type 2); CHAdeMO,https://openchargemap.org/site/poi/details/191161,matched_by_location_address_operator
+site_ded13d04dfc09df416da,unmatched,,,,,,no_eligible_poi_with_connector_type
+site_df19febbc7fa591feb92,unmatched,,,,,,no_eligible_poi_with_connector_type
+site_e02bae11b3d22c29ef6a,unmatched,,,,,,no_eligible_poi_with_connector_type
+site_e062d314b406a86c18a1,unmatched,,,,,,no_eligible_poi_with_connector_type
+site_e0829cdc1dd770dc8b0e,unmatched,,,,,,no_eligible_poi_with_connector_type
+site_e0e0eeb00d79275b02a0,unmatched,,,,,,no_eligible_poi_with_connector_type
+site_e187ef1b95f55e2be1d9,unmatched,,,,,,no_eligible_poi_with_connector_type
+site_e2464dcfda0a3c317237,unmatched,,,,,,no_eligible_poi_with_connector_type
+site_e256af119a0beb96d616,matched,190394,48.04,0.5712,CCS (Type 2); CHAdeMO,https://openchargemap.org/site/poi/details/190394,matched_by_location_address_operator
+site_e2bc646b9660e39d70dc,unmatched,,,,,,no_eligible_poi_with_connector_type
+site_e2c003cdef82d4f734df,unmatched,,,,,,no_eligible_poi_with_connector_type
+site_e33c354a62ce1540e5b7,unmatched,,,,,,no_eligible_poi_with_connector_type
+site_e42145ce451e1baf7b05,unmatched,,,,,,no_eligible_poi_with_connector_type
+site_e527adb2c02026f78e3e,matched,272694,24.34,0.7534,CCS (Type 2); CHAdeMO,https://openchargemap.org/site/poi/details/272694,matched_by_location_address_operator
+site_e58e33d7528f25dc3231,matched,190225,35.19,0.7077,CCS (Type 2); CHAdeMO,https://openchargemap.org/site/poi/details/190225,matched_by_location_address_operator
+site_e63fa6fc73a38ad3163d,matched,161993,20.12,0.6771,CCS (Type 2); CHAdeMO,https://openchargemap.org/site/poi/details/161993,matched_by_location_address_operator
+site_e688f2d9739ac72ef188,unmatched,,,,,,no_eligible_poi_with_connector_type
+site_e69c2dd835f29aeec03f,unmatched,,,,,,no_eligible_poi_with_connector_type
+site_e6d038cbc7ffd1cd0db4,matched,272641,24.99,0.75,CCS (Type 2); CHAdeMO,https://openchargemap.org/site/poi/details/272641,matched_by_location_address_operator
+site_e70f7abcd6340089728e,unmatched,,,,,,no_eligible_poi_with_connector_type
+site_e7c8d69f5d0ab5d768ac,matched,191954,1.91,0.8145,CCS (Type 2); CHAdeMO,https://openchargemap.org/site/poi/details/191954,matched_by_location_address_operator
+site_e921842d17932ae5870d,unmatched,,,,,,no_eligible_poi_with_connector_type
+site_ea1808a2043b4b0794b1,unmatched,,,,,,no_eligible_poi_with_connector_type
+site_ea46a9d3d127bb41df08,unmatched,,,,,,no_eligible_poi_with_connector_type
+site_eb168075f550866a06e0,unmatched,,,,,,no_eligible_poi_with_connector_type
+site_ec9b55747dfbb6e3f953,unmatched,,,,,,no_eligible_poi_with_connector_type
+site_ecdeb31be38c97f3dd90,unmatched,,,,,,no_eligible_poi_with_connector_type
+site_ef4003ba5f7bea978c86,unmatched,,,,,,no_eligible_poi_with_connector_type
+site_ef6138c06429034eb884,matched,191959,12.9,0.6699,CCS (Type 2); CHAdeMO,https://openchargemap.org/site/poi/details/191959,matched_by_location_address_operator
+site_f03305e5cdbd1dadbec3,unmatched,,,,,,no_eligible_poi_with_connector_type
+site_f069ba101a4decab0e7f,matched,266540,1.77,0.967,CCS (Type 2); CHAdeMO,https://openchargemap.org/site/poi/details/266540,matched_by_location_address_operator
+site_f0b0d8197416b8930182,unmatched,,,,,,no_eligible_poi_with_connector_type
+site_f0f8b7e3419ab369e8a8,unmatched,,,,,,no_eligible_poi_with_connector_type
+site_f12f66aea1a9d137ed34,unmatched,,,,,,no_eligible_poi_with_connector_type
+site_f1ed9b7d4375e6ed0d17,unmatched,,,,,,no_eligible_poi_with_connector_type
+site_f295320a6c09ffcbc86f,matched,272637,13.55,0.8243,CCS (Type 2),https://openchargemap.org/site/poi/details/272637,matched_by_location_address_operator
+site_f300e5dfb4ecd3efbf18,matched,272688,125.52,0.583,CCS (Type 2); CHAdeMO,https://openchargemap.org/site/poi/details/272688,matched_by_location_address_operator
+site_f37d2e40759edefe0227,unmatched,,,,,,no_eligible_poi_with_connector_type
+site_f3f5bb4155411ca228b8,matched,235461,85.69,0.4629,CCS (Type 2); CHAdeMO,https://openchargemap.org/site/poi/details/235461,matched_by_location_address_operator
+site_f4b04a26a218f48d86c4,unmatched,,,,,,no_eligible_poi_with_connector_type
+site_f57229740baa58d8ed38,unmatched,,,,,,no_eligible_poi_with_connector_type
+site_f69eaf9a6d55936791d5,matched,171647,36.61,0.5362,CCS (Type 2); CHAdeMO,https://openchargemap.org/site/poi/details/171647,matched_by_location_address_operator
+site_f72afdb1fae37f842638,matched,272693,13.44,0.8252,CCS (Type 2); CHAdeMO,https://openchargemap.org/site/poi/details/272693,matched_by_location_address_operator
+site_f745130a9a9f5ddaaa7a,unmatched,,,,,,no_eligible_poi_with_connector_type
+site_f926dbed22276a2fe8b4,unmatched,,,,,,no_eligible_poi_with_connector_type
+site_faabc1150b5fc228f71f,unmatched,,,,,,no_eligible_poi_with_connector_type
+site_fc97e5c98c124052e18f,unmatched,,,,,,no_eligible_poi_with_connector_type
+site_fd410163b8b51285c96c,unmatched,,,,,,no_eligible_poi_with_connector_type
+site_fd8d1ed8e176ac413f64,unmatched,,,,,,no_eligible_poi_with_connector_type
+site_fe8199f1e31626d16b31,unmatched,,,,,,no_eligible_poi_with_connector_type
+site_fe85f98b2a32fadc2b71,unmatched,,,,,,no_eligible_poi_with_connector_type
+site_ff04b205e8d905415d29,unmatched,,,,,,no_eligible_poi_with_connector_type
+site_ff43a60d0c5c65cfca31,unmatched,,,,,,no_eligible_poi_with_connector_type
+site_ff4dca2cb5af642b4e29,unmatched,,,,,,no_eligible_poi_with_connector_type

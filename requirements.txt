@@ -1,0 +1,4 @@
+# P0 metadata preparation and validation dependencies for COMP5339 A2.
+requests>=2.31,<3
+pandas>=2.0,<3
+duckdb>=1.3,<2

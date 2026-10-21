@@ -1,0 +1,18 @@
+{
+  "result": "PASS",
+  "rows": 432,
+  "columns": [
+    "station_id",
+    "name",
+    "lat",
+    "lon",
+    "site_type",
+    "connectors",
+    "max_kw"
+  ],
+  "urban_rows": 282,
+  "regional_rows": 150,
+  "connectors": 1656,
+  "one_day_hourly_price_rows": 10368,
+  "generator_execution": "NOT_RUN"
+}

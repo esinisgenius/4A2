@@ -1,0 +1,15 @@
+operator_original,operator_standard,reason
+BP,BP,canonical
+BP Australia,BP,known_alias
+Tesla,Tesla,canonical
+Tesla Motors,Tesla,known_alias
+Evie,Evie Networks,known_alias
+Evie Networks,Evie Networks,canonical
+Charge Hub,ChargeHub,known_alias
+ChargeHub,ChargeHub,canonical
+NRMA,NRMA,canonical
+NRMA Electric,NRMA,known_alias
+PLUS ES,PLUS ES,canonical
+PLUS ES Manag,PLUS ES,known_alias
+Viva Energy A,Viva Energy Australia,known_alias
+Viva Energy Australia,Viva Energy Australia,canonical
