@@ -40,7 +40,10 @@
     "meter_session_identity",
     "complete_ordered_minute_meters",
     "monotone_energy_and_soc",
-    "final_meter_energy_and_duration"
+    "final_meter_energy_and_duration",
+    "meter_voltage_current_power",
+    "meter_power_energy_increment",
+    "session_average_and_peak_power"
   ],
   "outputs": {
     "stations.csv": {
@@ -59,5 +62,6 @@
       "bytes": 25717065,
       "sha256": "b81f84103a08db7c14b1a96fd09fca48ba77528a41dbab8495a9cc0e365cc78c"
     }
-  }
+  },
+  "started_utc": "2026-10-21T20:58:23.562751+00:00"
 }

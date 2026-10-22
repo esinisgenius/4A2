@@ -1,4 +1,4 @@
-COMMAND ["C:\\Users\\LL\\AppData\\Local\\Programs\\Python\\Python312\\python.exe", "vendor/data_generator/generate_dataset.py", "--stations", "data/input/stations.csv", "--start", "2026-09-15", "--days", "1", "--out", "data/generated", "--seed", "5339", "--sessions-per-connector-day", "3", "2"]
+COMMAND ["C:\\Users\\LL\\Desktop\\comp5339\\COMP5339_A1\\.venv\\Scripts\\python.exe", "vendor/data_generator/generate_dataset.py", "--stations", "data/input/stations.csv", "--start", "2026-09-15", "--days", "1", "--out", "data/generated", "--seed", "5339", "--sessions-per-connector-day", "3", "2"]
 
 STDOUT
 432 stations, 10368 hourly prices, 4021 charging-sessions, 121800 meter-events -> data/generated/

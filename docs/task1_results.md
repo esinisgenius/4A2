@@ -47,6 +47,13 @@ required day is incomplete. It sets `PYTHONUTF8=1` and `PYTHONIOENCODING=utf-8`
 for consistent handling of the teacher's default text-file encoding on Windows.
 Re-running it regenerates only Task 1 outputs and run/validation records.
 
+Each run replaces previous report statuses before checking inputs. The run report
+records `RUNNING`, `PASS` or `FAIL`, together with the stage and UTC timestamps.
+On failure, it records the error; output validation is `NOT_RUN` if generation
+was not completed, or `FAIL` if the output check failed. All three reports share
+the current `started_utc`, so a successful preflight belongs to this run even if
+a later step fails. A failed run exits nonzero and must not be used for handoff.
+
 The generator invocation is exactly the handoff's date, duration, seed and rates:
 
 ```text
@@ -103,12 +110,25 @@ platform, so Git line-ending conversion cannot invalidate their recorded hashes.
   intervals; the final reading matches charging duration and session energy.
 - Meter energy is rounded to three decimal places, while session energy is rounded
   to two. The maximum allowed discrepancy is 0.0055 kWh plus numerical epsilon.
+- Meter power is checked against voltage times current, and each minute's energy
+  increment against power divided by 60. Session mean and peak power are checked
+  against energy/duration and the maximum meter power. Tolerances account for the
+  teacher's rounding of V/I to 0.1, power to 0.01, and session mean/peak to 0.1.
 
-The four inherited tests and twelve new Task 1 tests all pass (16 total). The new
+The four inherited tests and twenty-one Task 1 tests all pass (25 total). The
 tests include missing/duplicate AEMO intervals, duplicate prices, incorrect
 wholesale values, bad ID mappings, overlapping sessions, incorrect meter
 identities, missing meter minutes and decreasing energy. Valid rounding and
-sessions crossing midnight are accepted. These checks validate the generated
+sessions crossing midnight are accepted. Five tests exercise successful runs
+followed by download, preflight, generator exit, process launch or output-validation
+failures. Four additional negative cases check the electrical and power/energy
+relationships. A full post-fix run produced the same four CSV files byte for byte;
+metadata database and generator-input checks also passed. See
+`task1_fix_verification.json` for the post-fix evidence and `task1_review.md` for the
+plain-language review. The older `task1_review_evidence.json` records the original,
+pre-fix findings. `task1_final_check.json` records the subsequent full review,
+including isolated regeneration and independent SQL checks with zero errors.
+These checks validate the generated
 handoff; they do not establish that synthetic behaviour reflects real chargers.
 
 ## Notes for the Task 2 owner

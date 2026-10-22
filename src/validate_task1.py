@@ -149,6 +149,7 @@ def validate(root: Path = ROOT, output: Path | None = None) -> dict:
 
     previous = {}
     meter_counts = defaultdict(int)
+    meter_peaks = defaultdict(float)
     previous_global = None
     with (output / "session_metering.csv").open(encoding="utf-8", newline="") as handle:
         for row in csv.DictReader(handle):
@@ -167,8 +168,15 @@ def validate(root: Path = ROOT, output: Path | None = None) -> dict:
             require(time - last_time == timedelta(minutes=1), "Missing, duplicate or unordered minute meter")
             require(energy >= last_energy and 0 <= soc <= 100 and soc >= last_soc, "Decreasing meter energy or SoC")
             require(energy <= float(session["energy_kwh"]) + ENERGY_TOLERANCE, "Meter exceeds final session energy")
-            for key in ("voltage_v", "current_a", "power_kw"):
-                require(number(row[key], key) > 0, f"Non-positive meter {key}")
+            voltage, current, power = (number(row[key], key) for key in ("voltage_v", "current_a", "power_kw"))
+            require(voltage > 0 and current > 0 and power > 0, "Non-positive meter voltage, current or power")
+            # Teacher output rounds V/I to 0.1, power to 0.01, cumulative kWh to 0.001.
+            electrical_tolerance = 0.005 + (0.05 * (voltage + current) + 0.0025) / 1000 + 1e-9
+            require(abs(power - voltage * current / 1000) <= electrical_tolerance,
+                    f"Meter power differs from voltage/current: {session_id}/{time.isoformat()}")
+            require(abs((energy - last_energy) - power / 60) <= 0.001 + 0.005 / 60 + 1e-9,
+                    f"Meter energy increment differs from minute power: {session_id}/{time.isoformat()}")
+            meter_peaks[session_id] = max(meter_peaks[session_id], power)
             order = (time, session_id)
             require(previous_global is None or order >= previous_global, "Meter file is not globally time ordered")
             previous_global = order
@@ -179,6 +187,12 @@ def validate(root: Path = ROOT, output: Path | None = None) -> dict:
         require(previous[sid][0] == session_times[sid][1], "Missing final meter reading")
         require(abs(previous[sid][1] - float(row["energy_kwh"])) <= ENERGY_TOLERANCE, "Final meter energy mismatch")
         require(meter_counts[sid] == int(float(row["charge_minutes"])), "Meter count differs from charging minutes")
+        # Session mean/peak are rounded to 0.1 kW; session energy to 0.01 kWh.
+        minutes = float(row["charge_minutes"])
+        require(abs(float(row["avg_kw"]) - float(row["energy_kwh"]) * 60 / minutes) <=
+                0.05 + 0.005 * 60 / minutes + 1e-9, f"Session average power mismatch: {sid}")
+        require(abs(float(row["peak_kw"]) - meter_peaks[sid]) <= 0.055 + 1e-9,
+                f"Session peak power mismatch: {sid}")
 
     return {
         "result": "PASS", "aemo": aemo,
@@ -194,7 +208,8 @@ def validate(root: Path = ROOT, output: Path | None = None) -> dict:
         "checks": ["complete_aemo_day", "input_and_metadata_mapping", "generated_station_metadata",
                    "hourly_price_coverage_and_uniqueness", "aemo_and_dynamic_price_formula", "session_ids_and_foreign_keys",
                    "connector_range_and_nonoverlap", "session_timing_energy_cost", "meter_session_identity",
-                   "complete_ordered_minute_meters", "monotone_energy_and_soc", "final_meter_energy_and_duration"],
+                   "complete_ordered_minute_meters", "monotone_energy_and_soc", "final_meter_energy_and_duration",
+                   "meter_voltage_current_power", "meter_power_energy_increment", "session_average_and_peak_power"],
         "outputs": {name: {"bytes": (output / name).stat().st_size, "sha256": digest(output / name)} for name in OUTPUT_NAMES},
     }
 
