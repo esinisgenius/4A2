@@ -28,3 +28,14 @@ logs/*
 
 # Regenerable AEMO download cache
 data/generated/aemo_cache/
+
+# Reproducible exploratory replays; ship the short MQTT demo and manifests.
+data/events/full/events.json
+data/events/20260915T090000_20260915T130000/events.json
+data/events/mqtt_smoke/events.json
+
+# Keep the verified example; subsequent local runs remain local by default.
+data/published/*
+!data/published/task2-local-verification-20261027/
+data/published/**/publisher.lock
+data/published/**/checkpoint.json

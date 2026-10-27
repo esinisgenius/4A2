@@ -1,3 +1,7 @@
 # Preserve the exact Task 1 output/cache bytes recorded in the SHA-256 manifest.
 data/generated/** binary
 logs/task1_generation.log binary
+
+# Preserve replay and evidence hashes across Windows/Linux checkouts.
+data/events/** -text
+data/published/** -text

@@ -1,0 +1,67 @@
+{
+  "preparation_status": "PASS",
+  "publication_status": "NOT_PUBLISHED",
+  "schema_version": "1.0",
+  "dataset_id": "ds_80fb8920cf20f1c748f26b1a49fe292c8618f37a4d48f730ca47ed9dc1d081b3",
+  "source_time_basis": "Fixed AEST / UTC+10 (no daylight saving)",
+  "payload_time_basis": "UTC",
+  "source_files": {
+    "stations": {
+      "path": "data/generated/stations.csv",
+      "sha256": "8393787a54226decd4b25d351bb52895211922302c63f8c0b0eb6b7a2a3ae83e"
+    },
+    "mapping": {
+      "path": "data/processed/generator_station_mapping.csv",
+      "sha256": "fbf38f72b2ba9d28190ad988f67c864286b6eba225666ca979dca071e0726516"
+    },
+    "prices": {
+      "path": "data/generated/prices_hourly.csv",
+      "sha256": "4bd7fb3a9358bfb83b01a9955a7346d3d74caf02dfd334445a6ac8a31e82bdde"
+    },
+    "sessions": {
+      "path": "data/generated/sessions.csv",
+      "sha256": "ed4a6f66614be2f35d874fce86447667f22f8dde37139dca56ca3f33450c24f2"
+    },
+    "meters": {
+      "path": "data/generated/session_metering.csv",
+      "sha256": "b81f84103a08db7c14b1a96fd09fca48ba77528a41dbab8495a9cc0e365cc78c"
+    }
+  },
+  "source_counts": {
+    "configurations": 432,
+    "hourly_prices": 10368,
+    "sessions": 4021,
+    "meters": 121800
+  },
+  "full_dataset_price_events": 4320,
+  "full_dataset_unchanged_price_rows_removed": 6048,
+  "window": null,
+  "selected_sessions": 4021,
+  "event_count": 134162,
+  "event_counts": {
+    "price_update": 4320,
+    "session_start": 4021,
+    "meter": 121800,
+    "session_end": 4021
+  },
+  "warmup_event_count": 0,
+  "first_event_time": "2026-09-14T14:00:00Z",
+  "last_event_time": "2026-09-15T15:15:41Z",
+  "ordering": [
+    "event_time",
+    "price_update < meter < session_end < session_start",
+    "event_id"
+  ],
+  "minimum_publish_interval_seconds": 0.1,
+  "minimum_spacing_duration_seconds": 13416.1,
+  "stream_checks": {
+    "unique_events": 134162,
+    "completed_sessions": 4021,
+    "active_sessions_at_end": 0,
+    "configuration_prices_at_end": 432
+  },
+  "interface_status": "Task 2 contract 1.0; see docs/event_schema.md and docs/mqtt_topics.md. Publisher adds run_id.",
+  "events_file": "events.json",
+  "events_sha256": "6b3380671e0ced022c492f870449741b470c870d1bc09c97c519546dc55576fd",
+  "events_bytes": 79656551
+}
