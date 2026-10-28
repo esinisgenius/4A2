@@ -26,6 +26,9 @@ venv/
 *.log
 logs/*
 
+# Task 3 local subscriber journal (not a Task 4 deliverable)
+database/task3_events.sqlite*
+
 # Regenerable AEMO download cache
 data/generated/aemo_cache/
 
