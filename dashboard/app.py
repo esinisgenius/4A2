@@ -20,6 +20,9 @@ st.caption("COMP5339 A2 · Task 3 · Synthetic replay; event time is UTC (NEM so
 with st.sidebar:
     run_id = st.text_input("Replay run ID", value="team-demo-01")
     journal = st.text_input("Subscriber journal", value=str(ROOT / "database/task3_events.sqlite"))
+    refresh = st.toggle("Auto-refresh every 5 seconds", value=False, help="Off by default to prevent map tile flashing; click Refresh to load new events.")
+    if st.button("Refresh events now"):
+        st.rerun()
     st.info("Start subscriber and wait for SUBACK before launching publisher. Each new replay requires a new run ID.")
 
 @st.cache_data
@@ -31,7 +34,7 @@ def metadata():
 
 sites, chargers = metadata()
 
-@st.fragment(run_every="2s")
+@st.fragment(run_every="5s" if refresh else None)
 def live():
     if not run_id or not Path(journal).exists():
         st.warning("No events yet. Start src/subscriber.py with the matching --run-id, then publish.")
@@ -74,7 +77,7 @@ def live():
                          hover_name="station_name", hover_data=["address", "active"],
                          zoom=5, height=510)
     fig.update_layout(map_style="open-street-map", margin=dict(l=0,r=0,t=0,b=0), legend_title_text="Status")
-    st.plotly_chart(fig, use_container_width=True)
+    st.plotly_chart(fig, use_container_width=True, key="task3_station_map")
     choices = dict(zip(geo["station_name"]+" · "+geo["station_id"],geo["station_id"]))
     selected = st.selectbox("Station details", list(choices), index=0)
     sid = choices[selected]
@@ -82,20 +85,26 @@ def live():
     st.dataframe(details.loc[details["station_id"] == sid,
        ["charger_id", "operator_standard", "number_of_plugs", "connector_types",
         "Latest price (AUD/kWh)", "Active plugs"]], use_container_width=True, hide_index=True)
-    live_sessions = [e for e in state["active"].values() if e["station_id"] == sid]
-    if not live_sessions:
-        st.caption("No active sessions at this station.")
+    st.subheader("Charging progress — all sessions in selected run")
+    sessions = {**state["completed"], **state["active"]}
+    sessions_with_readings = [e for e in sessions.values() if state["meters"].get(e["session_id"])]
+    if not sessions_with_readings:
+        st.info("No meter readings received yet. Wait for Publisher to send meter events (or press Refresh).")
         return
-    sids = {f"{e['session_id']} · connector {e['connector_id']}": e["session_id"] for e in live_sessions}
-    chosen = st.selectbox("Active charging session", list(sids))
-    readings = state["meters"].get(sids[chosen], [])
-    if readings:
-        df = pd.DataFrame(readings)
-        metric = st.radio("Live meter curve", ["energy_kwh", "power_kw"], horizontal=True,
-                          format_func=lambda x: "Cumulative energy (kWh)" if x=="energy_kwh" else "Power (kW)")
-        fig2 = px.line(df, x="event_time", y=metric, markers=True, title="Charging progress")
-        st.plotly_chart(fig2, use_container_width=True)
-    else:
-        st.info("Waiting for meter readings for this active session.")
+    station_first = [e for e in sessions_with_readings if e["station_id"] == sid]
+    ordered = station_first + [e for e in sessions_with_readings if e["station_id"] != sid]
+    options = {
+        f"{'Active' if e['session_id'] in state['active'] else 'Completed'} · {e['station_id']} · connector {e['connector_id']} · {e['session_id']}": e["session_id"]
+        for e in ordered
+    }
+    chosen = st.selectbox("Session with meter readings", options.keys(), key="task3_session")
+    readings = state["meters"][options[chosen]]
+    df = pd.DataFrame(readings).sort_values("event_time")
+    df["event_time"] = pd.to_datetime(df["event_time"], utc=True)
+    metric = st.radio("Live meter curve", ["energy_kwh", "power_kw"], horizontal=True,
+                      format_func=lambda x: "Cumulative energy (kWh)" if x=="energy_kwh" else "Power (kW)")
+    fig2 = px.line(df, x="event_time", y=metric, markers=True, title="Charging progress")
+    st.plotly_chart(fig2, use_container_width=True, key="task3_meter_curve")
+    st.caption(f"{len(readings)} meter readings · session status: {'Active' if options[chosen] in state['active'] else 'Completed'}")
 
 live()
