@@ -1,10 +1,12 @@
 """Interactive NSW station map and live MQTT projection for Task 3."""
-import os
 import sqlite3
+from html import escape
 import sys
 from pathlib import Path
 
 import duckdb
+import folium
+from streamlit_folium import st_folium
 import pandas as pd
 import plotly.express as px
 import streamlit as st
@@ -73,12 +75,42 @@ def live():
     geo = sites[sites["station_id"].isin(details["station_id"])].copy()
     geo["active"] = geo["station_id"].map(station_counts).fillna(0).astype(int)
     geo["status"] = geo["active"].map(lambda n: "Occupied" if n else "No active session")
-    fig = px.scatter_map(geo, lat="latitude", lon="longitude", color="status",
-                         hover_name="station_name", hover_data=["address", "active"],
-                         center={"lat": -33.6, "lon": 150.9}, zoom=7, height=510)
-    fig.update_layout(map_style="open-street-map", margin=dict(l=0,r=0,t=0,b=0),
-                      legend_title_text="Status", uirevision="nsw-map-view")
-    st.plotly_chart(fig, use_container_width=True, key="task3_station_map")
+    # Native Leaflet popups satisfy the Task 3 marker-click requirement.
+    # Keep OpenStreetMap tiles and the existing NSW initial viewport.
+    m = folium.Map(location=[-33.6, 150.9], zoom_start=7,
+                   tiles="OpenStreetMap", control_scale=True, prefer_canvas=True)
+    for site in geo.itertuples(index=False):
+        site_rows = details.loc[details["station_id"] == site.station_id].sort_values("charger_id")
+        charger_info = []
+        for _, charger in site_rows.iterrows():
+            raw_price = charger["Latest price (AUD/kWh)"]
+            price = f"AUD {float(raw_price):.2f}/kWh" if pd.notna(raw_price) else "Not received yet"
+            plugs = int(charger["number_of_plugs"])
+            plug_types = str(charger["connector_types"] or "Unknown").replace("|", ", ")
+            charger_info.append(
+                "<div style='border-top:1px solid #ddd;padding-top:6px;margin-top:6px'>"
+                f"<b>Operator:</b> {escape(str(charger['operator_standard']))}<br>"
+                f"<b>Charger ID:</b> <code style='overflow-wrap:anywhere'>{escape(str(charger['charger_id']))}</code><br>"
+                f"<b>Plugs:</b> {plugs} · <b>Occupied:</b> {int(charger['Active plugs'])}<br>"
+                f"<b>Plug types:</b> {escape(plug_types)}<br>"
+                f"<b>Latest price:</b> {escape(price)}</div>"
+            )
+        popup_html = (
+            "<div style='font:13px Arial,sans-serif;min-width:280px;max-width:350px'>"
+            f"<strong style='font-size:15px'>{escape(str(site.station_name))}</strong><br>"
+            f"<b>Address:</b> {escape(str(site.address))}<br>"
+            + "".join(charger_info) + "</div>"
+        )
+        folium.CircleMarker(
+            location=[float(site.latitude), float(site.longitude)], radius=6,
+            color="#b45309" if site.active else "#2563eb",
+            fill=True, fill_opacity=0.85,
+            tooltip=str(site.station_name),
+            popup=folium.Popup(folium.IFrame(html=popup_html, width=390, height=min(400, 130 + 155 * len(site_rows))),
+                               max_width=420),
+        ).add_to(m)
+    st_folium(m, height=510, use_container_width=True, key="task3_station_map",
+              returned_objects=[])
     # Show human-friendly station names while keeping the original station IDs internally.
     # Append a short numeric label only for duplicate names.
     name_counts = geo["station_name"].value_counts()
