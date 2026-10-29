@@ -93,7 +93,6 @@ def live():
         ["charger_id", "operator_standard", "number_of_plugs", "connector_types",
          "Latest price (AUD/kWh)", "Active plugs"]].copy()
     station_chargers = station_chargers.sort_values("charger_id").reset_index(drop=True)
-    station_chargers.insert(0, "Charger", [f"Charger {i:02d}" for i in range(1, len(station_chargers) + 1)])
     station_chargers["connector_types"] = station_chargers["connector_types"].fillna("").str.replace("|", ", ", regex=False)
     station_chargers = station_chargers.rename(columns={
         "operator_standard": "Operator", "number_of_plugs": "Plugs",
@@ -101,7 +100,7 @@ def live():
         "Active plugs": "Occupied", "charger_id": "Charger ID"
     })
     station_chargers = station_chargers[
-        ["Charger", "Operator", "Plugs", "Connector Types", "Price (AUD/kWh)", "Occupied", "Charger ID"]
+        ["Charger ID", "Operator", "Plugs", "Connector Types", "Price (AUD/kWh)", "Occupied"]
     ]
     st.dataframe(station_chargers, use_container_width=True, hide_index=True)
     st.subheader("Charging progress — all sessions in selected run")
