@@ -104,10 +104,22 @@ def live():
             f"<b>Address:</b> {escape(str(site.address))}<br>"
             + "".join(charger_info) + "</div>"
         )
-        folium.CircleMarker(
-            location=[float(site.latitude), float(site.longitude)], radius=4, weight=1,
-            color="#b45309" if site.active else "#2563eb",
-            fill=True, fill_opacity=0.78,
+        # MarkerCluster supports L.Marker, not Leaflet CircleMarker (Path).
+        # A DivIcon gives the marker a compact dot while preserving a generous click target.
+        color = "#b45309" if site.active else "#2563eb"
+        dot_icon = folium.DivIcon(
+            icon_size=(20, 20), icon_anchor=(10, 10),
+            html=(
+                "<div style='width:20px;height:20px;display:flex;"
+                "align-items:center;justify-content:center;cursor:pointer'>"
+                f"<span style='display:block;width:9px;height:9px;border-radius:50%;"
+                f"background:{color};border:1px solid white;"
+                "box-shadow:0 0 0 1px rgba(0,0,0,.12)'></span></div>"
+            ),
+        )
+        folium.Marker(
+            location=[float(site.latitude), float(site.longitude)],
+            icon=dot_icon,
             tooltip=str(site.station_name),
             popup=folium.Popup(popup_html, max_width=315, min_width=265),
         ).add_to(cluster)
