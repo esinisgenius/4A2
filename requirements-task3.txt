@@ -1,0 +1,4 @@
+streamlit>=1.40,<2
+plotly>=5.20,<8
+folium>=0.17,<1
+streamlit-folium>=0.23,<1
