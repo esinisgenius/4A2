@@ -94,8 +94,17 @@ def live():
         return
     station_first = [e for e in sessions_with_readings if e["station_id"] == sid]
     ordered = station_first + [e for e in sessions_with_readings if e["station_id"] != sid]
+    # Human-readable labels are scoped to the current replay and stable as new events arrive.
+    # The original session_id remains the unique internal key for MQTT/state lookup.
+    session_numbers = {
+        session_id: i
+        for i, session_id in enumerate(
+            sorted(sessions, key=lambda sid: (sessions[sid]["sequence"], sid)), start=1
+        )
+    }
     options = {
-        f"{'Active' if e['session_id'] in state['active'] else 'Completed'} · {e['station_id']} · connector {e['connector_id']} · {e['session_id']}": e["session_id"]
+        f"Session {session_numbers[e['session_id']]:03d} · Connector {e['connector_id']} · "
+        f"{'Active' if e['session_id'] in state['active'] else 'Completed'}": e["session_id"]
         for e in ordered
     }
     chosen = st.selectbox("Session with meter readings", options.keys(), key="task3_session")
