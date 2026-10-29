@@ -98,8 +98,11 @@ def live():
     station_chargers = station_chargers.rename(columns={
         "operator_standard": "Operator", "number_of_plugs": "Plugs",
         "connector_types": "Connector Types", "Latest price (AUD/kWh)": "Price (AUD/kWh)",
-        "Active plugs": "Occupied"
-    }).drop(columns="charger_id")
+        "Active plugs": "Occupied", "charger_id": "Charger ID"
+    })
+    station_chargers = station_chargers[
+        ["Charger", "Operator", "Plugs", "Connector Types", "Price (AUD/kWh)", "Occupied", "Charger ID"]
+    ]
     st.dataframe(station_chargers, use_container_width=True, hide_index=True)
     st.subheader("Charging progress — all sessions in selected run")
     sessions = {**state["completed"], **state["active"]}
