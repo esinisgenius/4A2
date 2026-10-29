@@ -79,13 +79,28 @@ def live():
     fig.update_layout(map_style="open-street-map", margin=dict(l=0,r=0,t=0,b=0),
                       legend_title_text="Status", uirevision="nsw-map-view")
     st.plotly_chart(fig, use_container_width=True, key="task3_station_map")
-    choices = dict(zip(geo["station_name"]+" · "+geo["station_id"],geo["station_id"]))
-    selected = st.selectbox("Station details", list(choices), index=0)
-    sid = choices[selected]
+    # Show human-friendly station names while keeping the original station IDs internally.
+    # Append a short numeric label only for duplicate names.
+    name_counts = geo["station_name"].value_counts()
+    station_labels = {
+        (f"{row.station_name} · Station {i:03d}" if name_counts[row.station_name] > 1 else row.station_name): row.station_id
+        for i, row in enumerate(geo.sort_values(["station_name", "station_id"]).itertuples(index=False), start=1)
+    }
+    selected = st.selectbox("Station details", list(station_labels), index=0)
+    sid = station_labels[selected]
     st.write("**Address:**", geo.loc[geo["station_id"] == sid, "address"].iloc[0])
-    st.dataframe(details.loc[details["station_id"] == sid,
-       ["charger_id", "operator_standard", "number_of_plugs", "connector_types",
-        "Latest price (AUD/kWh)", "Active plugs"]], use_container_width=True, hide_index=True)
+    station_chargers = details.loc[details["station_id"] == sid,
+        ["charger_id", "operator_standard", "number_of_plugs", "connector_types",
+         "Latest price (AUD/kWh)", "Active plugs"]].copy()
+    station_chargers = station_chargers.sort_values("charger_id").reset_index(drop=True)
+    station_chargers.insert(0, "Charger", [f"Charger {i:02d}" for i in range(1, len(station_chargers) + 1)])
+    station_chargers["connector_types"] = station_chargers["connector_types"].fillna("").str.replace("|", ", ", regex=False)
+    station_chargers = station_chargers.rename(columns={
+        "operator_standard": "Operator", "number_of_plugs": "Plugs",
+        "connector_types": "Connector Types", "Latest price (AUD/kWh)": "Price (AUD/kWh)",
+        "Active plugs": "Occupied"
+    }).drop(columns="charger_id")
+    st.dataframe(station_chargers, use_container_width=True, hide_index=True)
     st.subheader("Charging progress — all sessions in selected run")
     sessions = {**state["completed"], **state["active"]}
     sessions_with_readings = [e for e in sessions.values() if state["meters"].get(e["session_id"])]
