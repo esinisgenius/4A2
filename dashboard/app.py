@@ -6,6 +6,7 @@ from pathlib import Path
 
 import duckdb
 import folium
+from folium.plugins import MarkerCluster
 from streamlit_folium import st_folium
 import pandas as pd
 import plotly.express as px
@@ -79,6 +80,7 @@ def live():
     # Keep OpenStreetMap tiles and the existing NSW initial viewport.
     m = folium.Map(location=[-33.6, 150.9], zoom_start=7,
                    tiles="OpenStreetMap", control_scale=True, prefer_canvas=True)
+    cluster = MarkerCluster(name="Charging stations", options={"showCoverageOnHover": False, "maxClusterRadius": 36, "spiderfyOnMaxZoom": True}).add_to(m)
     for site in geo.itertuples(index=False):
         site_rows = details.loc[details["station_id"] == site.station_id].sort_values("charger_id")
         charger_info = []
@@ -88,27 +90,27 @@ def live():
             plugs = int(charger["number_of_plugs"])
             plug_types = str(charger["connector_types"] or "Unknown").replace("|", ", ")
             charger_info.append(
-                "<div style='border-top:1px solid #ddd;padding-top:6px;margin-top:6px'>"
+                "<div style='border-top:1px solid #e5e7eb;padding-top:7px;margin-top:7px'>"
                 f"<b>Operator:</b> {escape(str(charger['operator_standard']))}<br>"
-                f"<b>Charger ID:</b> <code style='overflow-wrap:anywhere'>{escape(str(charger['charger_id']))}</code><br>"
+                f"<details style='margin:4px 0'><summary style='cursor:pointer;color:#555'>Charger ID</summary>"
+                f"<code style='display:block;font-size:10px;overflow-wrap:anywhere;margin-top:3px'>{escape(str(charger['charger_id']))}</code></details>"
                 f"<b>Plugs:</b> {plugs} · <b>Occupied:</b> {int(charger['Active plugs'])}<br>"
                 f"<b>Plug types:</b> {escape(plug_types)}<br>"
                 f"<b>Latest price:</b> {escape(price)}</div>"
             )
         popup_html = (
-            "<div style='font:13px Arial,sans-serif;min-width:280px;max-width:350px'>"
+            "<div style='font:13px/1.45 Arial,sans-serif;width:260px;max-width:280px;padding:2px;color:#222'>"
             f"<strong style='font-size:15px'>{escape(str(site.station_name))}</strong><br>"
             f"<b>Address:</b> {escape(str(site.address))}<br>"
             + "".join(charger_info) + "</div>"
         )
         folium.CircleMarker(
-            location=[float(site.latitude), float(site.longitude)], radius=6,
+            location=[float(site.latitude), float(site.longitude)], radius=4, weight=1,
             color="#b45309" if site.active else "#2563eb",
-            fill=True, fill_opacity=0.85,
+            fill=True, fill_opacity=0.78,
             tooltip=str(site.station_name),
-            popup=folium.Popup(folium.IFrame(html=popup_html, width=390, height=min(400, 130 + 155 * len(site_rows))),
-                               max_width=420),
-        ).add_to(m)
+            popup=folium.Popup(popup_html, max_width=315, min_width=265),
+        ).add_to(cluster)
     st_folium(m, height=510, use_container_width=True, key="task3_station_map",
               returned_objects=[])
     # Show human-friendly station names while keeping the original station IDs internally.
