@@ -75,8 +75,9 @@ def live():
     geo["status"] = geo["active"].map(lambda n: "Occupied" if n else "No active session")
     fig = px.scatter_map(geo, lat="latitude", lon="longitude", color="status",
                          hover_name="station_name", hover_data=["address", "active"],
-                         zoom=5, height=510)
-    fig.update_layout(map_style="open-street-map", margin=dict(l=0,r=0,t=0,b=0), legend_title_text="Status")
+                         center={"lat": -33.6, "lon": 150.9}, zoom=7, height=510)
+    fig.update_layout(map_style="open-street-map", margin=dict(l=0,r=0,t=0,b=0),
+                      legend_title_text="Status", uirevision="nsw-map-view")
     st.plotly_chart(fig, use_container_width=True, key="task3_station_map")
     choices = dict(zip(geo["station_name"]+" · "+geo["station_id"],geo["station_id"]))
     selected = st.selectbox("Station details", list(choices), index=0)
