@@ -4,7 +4,7 @@
 
 This repository is an independent A2 copy derived from the validated COMP5339 A1 project. This branch includes **P0 metadata preparation, completed Task 1 generation and Task 2 MQTT publishing**. Task 2 preserves upstream CSVs and the historical A1 submission, maps configuration-level events to physical stations, and supports ordered publishing with durable resume.
 
-The Task 3 production subscriber/dashboard and Task 4 event storage remain separate team modules. The included test receiver verifies MQTT delivery only; `database/charger_metadata.duckdb` contains P0 metadata, not the final subscriber event database.
+This branch implements the Task 3 MQTT subscriber and interactive map dashboard. Task 4 DuckDB storage remains a separate teammate responsibility. The included test receiver verifies MQTT delivery only; `database/charger_metadata.duckdb` contains P0 metadata, not the final subscriber event database.
 
 ## Data Lineage
 
@@ -65,6 +65,51 @@ Python 3.12 is the tested version. On Windows PowerShell, activate with
 `.venv\Scripts\Activate.ps1`, or invoke `.venv\Scripts\python.exe` directly.
 For the optional local broker and network verification, install
 `python -m pip install -r requirements-demo.txt` instead.
+
+## Task 3 — MQTT subscriber and clickable map
+
+Task 3 implementation: `src/subscriber.py`, `src/task3_state.py`, `dashboard/app.py`. The map uses Folium/Leaflet: **hover** shows a station's name; **click** opens a popup with its name, address, operator, plug types, plug/occupancy counts, latest charger-specific price, and raw charger ID. The map initially centers on NSW; the station selector and live meter curve remain available.
+
+### Run (macOS/Linux)
+
+From the project root with a Python virtual environment activated:
+
+```bash
+python -m pip install -r requirements-demo.txt
+python -m pip install -r requirements-task3.txt
+python -m unittest discover -s tests -p 'test_task3_state.py' -v
+```
+
+Open four terminals, each at the project root with the environment activated:
+
+```bash
+# Terminal 1: broker (keep open)
+python src/local_broker.py
+
+# Terminal 2: subscriber — wait for SUBACK before publishing
+python src/subscriber.py --run-id team-demo-03
+
+# Terminal 3: dashboard; visit http://localhost:8501
+streamlit run dashboard/app.py
+
+# Terminal 4: publisher (only after subscriber SUBACK)
+python src/publisher.py --events data/events/mqtt_demo/events.json --run-id team-demo-03
+```
+
+Select `team-demo-03` in the dashboard. Enable auto-refresh (5 seconds) to view live session progress. Disable it for stable manual map exploration if the map resets. Never run two publishers with the same run ID. Use a **fresh run ID** for each new replay across publisher, subscriber, and dashboard. The demo includes 1,091 events (864 price updates, 16 starts, 210 meters, 1 end); 15 sessions remain active at cutoff.
+
+Windows PowerShell: activate with `.venv\\Scripts\\Activate.ps1` and invoke `python` from the activated environment.
+
+### Task 4 integration handoff (Task 4 is NOT implemented here)
+
+- Existing A1 metadata is in `database/charger_metadata.duckdb`: `stations.station_id` identifies physical sites; `chargers.charger_id` identifies charger configurations. A station may have multiple charger configurations and different prices.
+- Live MQTT contract: `docs/event_schema.md`, `docs/mqtt_topics.md`; subscribe to `comp5339/a2/runs/{run_id}/#` at QoS 1, without retained messages. All four event types include `run_id`, `dataset_id`, `event_id`, `sequence`, `event_time`, `station_id`, and `charger_id`.
+- Deduplicate on `(run_id,event_id)`; identify sessions by `(run_id,session_id)` and occupancy by `(run_id,charger_id,connector_id)`. Keep the chosen run separate; apply events in contiguous sequence order.
+- Prices are keyed per charger configuration, not per station. `session_end` (unplug) releases occupancy; `charge_end_time` does not.
+- Task 3's `database/task3_events.sqlite` is a **local receiving journal**, NOT the required Task 4 DuckDB artifact. The Task 4 owner should independently persist incoming MQTT events in DuckDB and provide an agreed query interface (active sessions and at least one historical metric). Current dashboard metrics come from Task 3 journal only until this integration is completed.
+- For integration testing, start broker, both subscribers, then publisher; verify distinct accepted `(run_id,event_id)` counts against the run's `publish_manifest.json` and demonstrate active/completed state with sample meter curves. A broker PUBACK is not proof of Task 4 database persistence. Coordinate schema/API changes rather than modifying Task 4 source code in this branch.
+
+See `docs/task3_dashboard.md` and `docs/TASK2_TEAM_HANDOFF_ZH.md` for further details.
 
 ## Task 2 quick start
 
