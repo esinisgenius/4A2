@@ -21,19 +21,24 @@ st.set_page_config(page_title="NSW EV Charging Live", page_icon="⚡", layout="w
 st.title("NSW EV Charging")
 st.caption("COMP5339 A2 · Task 3 · Synthetic replay; event time is UTC (NEM source uses fixed UTC+10)")
 
-with st.sidebar:
-    mode = st.radio("View", ["Live demonstration", "Historical replay"], horizontal=False)
+# Top controls keep the map full-width; no sidebar.
+mode_col, run_col, refresh_col, action_col = st.columns([1.7, 2.5, 1.6, 1.1], vertical_alignment="bottom")
+with mode_col:
+    mode = st.selectbox("View", ["Live demonstration", "Historical replay"])
+with run_col:
     if mode == "Live demonstration":
-        run_id = st.text_input("Live run ID", value="", placeholder="e.g. demo-2026-01",
-                               help="Choose a new Run ID, then use the same ID in the Publisher terminal.")
+        run_id = st.text_input("Run ID", value="", placeholder="Enter new live run ID",
+                               help="Use exactly the same ID in the Publisher terminal.")
     else:
-        run_id = st.text_input("Historical run ID", value="integration-demo-01")
-    st.caption("MQTT → single DuckDB writer → live dashboard")
-    refresh = st.toggle("Auto-refresh every 5 seconds", value=True,
-                        help="Disable temporarily to interact with map popups.")
-    if st.button("Refresh events now"):
+        run_id = st.text_input("Run ID", value="integration-demo-01",
+                               help="Select a previously stored run.")
+with refresh_col:
+    refresh = st.toggle("Auto-refresh (5s)", value=True,
+                        help="Turn off temporarily to interact with map popups.")
+with action_col:
+    if st.button("Refresh now", use_container_width=True):
         st.rerun()
-    st.caption("1. Start Broker  2. Wait for SUBACK  3. Start Publisher with the matching Run ID")
+st.caption("Broker → MQTT Publisher → DuckDB Subscriber → Live Map · Start Publisher only after SUBACK.")
 
 @st.cache_data
 def metadata():
