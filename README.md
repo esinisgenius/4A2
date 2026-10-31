@@ -4,7 +4,7 @@
 
 This repository is an independent A2 copy derived from the validated COMP5339 A1 project. This branch includes **P0 metadata preparation, completed Task 1 generation and Task 2 MQTT publishing**. Task 2 preserves upstream CSVs and the historical A1 submission, maps configuration-level events to physical stations, and supports ordered publishing with durable resume.
 
-This branch implements the Task 3 MQTT subscriber and interactive map dashboard. Task 4 DuckDB storage remains a separate teammate responsibility. The included test receiver verifies MQTT delivery only; `database/charger_metadata.duckdb` contains P0 metadata, not the final subscriber event database.
+The integrated branch includes the original Task 3 map and Task 4 DuckDB modules, plus a single-writer runtime for shared operation. The included test receiver verifies MQTT delivery only; `database/charger_metadata.duckdb` contains P0 metadata, not the final subscriber event database.
 
 ## Data Lineage
 
@@ -65,6 +65,95 @@ Python 3.12 is the tested version. On Windows PowerShell, activate with
 `.venv\Scripts\Activate.ps1`, or invoke `.venv\Scripts\python.exe` directly.
 For the optional local broker and network verification, install
 `python -m pip install -r requirements-demo.txt` instead.
+
+## Integrated deployment — single DuckDB source (recommended)
+
+This branch combines Task 3 visualisation with the Task 4 MQTT/DuckDB state
+engine. **Only one MQTT subscriber and one persisted event database are used.**
+The subscriber runs as an internal worker of the Streamlit process. It owns
+the DuckDB write connection; Streamlit requests consistent snapshots through
+a thread-safe queue. No SQLite, duplicate MQTT subscription, HTTP API, or
+concurrent cross-process DuckDB reads are needed.
+
+Key files: `src/integrated_runtime.py` (thread and queue owner),
+`src/analytics_subscriber.py` (Task 4's ordered receiver),
+`src/analytics_storage.py` (atomic event/state persistence),
+`src/analytics_queries.py` (stored current/historical metrics),
+and `dashboard/app.py` (map, popups and meter charts).
+
+### Setup and run
+
+Use Python 3.12 and **all** requirements:
+
+```bash
+python3 -m venv .venv
+source .venv/bin/activate
+python -m pip install -r requirements-demo.txt
+python -m pip install -r requirements-task3.txt
+```
+
+Do this from the project root using **three** terminals:
+
+```bash
+# Terminal A — local MQTT broker
+python src/local_broker.py
+
+# Terminal B — start the integrated subscriber + dashboard
+streamlit run dashboard/app.py
+
+# Terminal C — after Terminal B shows "SUBACK: integrated DuckDB ready"
+python src/publisher.py --events data/events/mqtt_demo/events.json --run-id integration-demo-01
+```
+
+Set the Dashboard's **Replay run ID** to `integration-demo-01` **before**
+running the Publisher. Confirm `SUBACK` in the Streamlit terminal, then
+send the events. The MQTT topic filter is
+`comp5339/a2/runs/integration-demo-01/#`, QoS 1. Enable the Dashboard's
+5-second auto-refresh to see charging curves and updated station state.
+
+**Run a new ID for each fresh replay**; the broker has no retained messages.
+On the first start, the runtime creates `database/charger_analytics.duckdb`
+from the validated P0 metadata database and applies
+`database/analytics_schema.sql` in-place. It will reuse an existing Task 4
+analytics database if that file is already present. The original Task 4
+branch's prepopulated DB is a separate binary artifact; include the final
+verified DuckDB in the assignment ZIP.
+
+### Evidence and verification
+
+Expected for the provided short replay, after full publication: 1,091 stored
+events, 15 active sessions, 1 completed session, and 44.13 kWh completed
+energy (from the Task 4 verification). The 1,091 messages consist of 864
+prices, 16 starts, 210 meter events and 1 end. The Dashboard's live metrics
+come from DuckDB's `AnalyticsQueries.get_run_metrics`; the map and curves
+come from the same database's committed event payloads. Stop Streamlit
+**before** running a separate `python src/analytics_queries.py` process;
+its direct file open otherwise conflicts with the running DuckDB writer.
+No second `src/subscriber.py` or `src/analytics_subscriber.py` process
+should be started alongside the integrated dashboard.
+
+Run tests from the repo root:
+
+```bash
+python -m unittest discover -s tests -v
+```
+
+Do not present the short demo as all generated data. Task 1 has 10,368
+hourly prices and 4,021 charging sessions; Task 2 publishes only price
+changes and may replay a selected time window.
+
+### Shutdown / recovery and constraints
+
+Stop Streamlit with Ctrl+C to release its DuckDB connection. If the
+broker/subscriber disconnects or a sequence gap persists, the worker reports
+an error; do not claim completion unless the Dashboard event count matches
+the publisher's confirmed manifest. Restart the dashboard (same run for
+recovery only with a verified publisher resume; otherwise use a new run).
+Do not open the same DuckDB file for writing from another process. MQTT
+connection settings use localhost:1883 for the coursework demo; the integrated
+runtime is not a publicly deployed authenticated service. It performs
+disk-backed atomic commits before MQTT acknowledgements and uses the Task 4
+de-duplication and sequence validation logic.
 
 ## Task 3 — MQTT subscriber and clickable map
 
