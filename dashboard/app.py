@@ -2,6 +2,7 @@
 from html import escape
 import sys
 import re
+import json
 from pathlib import Path
 
 import duckdb
@@ -16,6 +17,8 @@ ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "src"))
 from task3_state import project
 from integrated_runtime import DashboardRuntime
+from analytics_queries import AnalyticsQueries
+from analytics_storage import DEFAULT_DATABASE
 
 st.set_page_config(page_title="NSW EV Charging Live", page_icon="⚡", layout="wide")
 st.title("NSW EV Charging")
@@ -56,6 +59,11 @@ def runtime_manager():
         def __init__(self):
             self.lock = threading.Lock()
             self.runtime = None
+        def stop(self):
+            with self.lock:
+                if self.runtime is not None:
+                    self.runtime.close()
+                    self.runtime = None
         def get(self, selected_run):
             with self.lock:
                 if self.runtime is None or self.runtime.run_id != selected_run:
@@ -66,26 +74,52 @@ def runtime_manager():
     return Manager()
 
 
+def historical_snapshot(selected_run):
+    """Read committed history directly, without starting an MQTT subscriber.
+
+    Called only when the live worker has released its DuckDB connection.
+    """
+    if not DEFAULT_DATABASE.is_file():
+        raise FileNotFoundError(f"Analytics database missing: {DEFAULT_DATABASE}")
+    with duckdb.connect(str(DEFAULT_DATABASE), read_only=True) as db:
+        with AnalyticsQueries(connection=db) as queries:
+            rows = db.execute(
+                "SELECT payload FROM mqtt_events WHERE run_id=? ORDER BY sequence",
+                [selected_run],
+            ).fetchall()
+            events = [json.loads(row[0]) for row in rows]
+            metrics = queries.get_run_metrics(selected_run) if events else None
+    return {"events": events, "metrics": metrics, "ready": False,
+            "received_packets": 0, "saved_events": len(events), "pending": 0}
+
+
 @st.fragment(run_every="5s" if refresh else None)
 def live():
     if not run_id.strip():
-        st.info("Enter a new Live run ID in the sidebar, then start the Publisher with exactly the same ID. Historical records remain available under Historical replay.")
+        st.info("Enter a new Live run ID above, then start the Publisher with exactly the same ID. Historical records remain available under Historical replay.")
         return
     if not re.fullmatch(r"[A-Za-z0-9_-]{1,160}", run_id):
         st.warning("Run ID must contain only letters, digits, underscores or hyphens.")
         return
     try:
-        runtime = runtime_manager().get(run_id)
-        snapshot = runtime.snapshot()
+        if mode == "Historical replay":
+            runtime_manager().stop()
+            snapshot = historical_snapshot(run_id)
+        else:
+            runtime = runtime_manager().get(run_id)
+            snapshot = runtime.snapshot()
         events = snapshot["events"]
         state = project(events)
         db_metrics = snapshot["metrics"]
-    except (RuntimeError, TimeoutError, ValueError) as exc:
+    except (RuntimeError, TimeoutError, ValueError, OSError, duckdb.Error) as exc:
         st.error(f"DuckDB runtime: {exc}")
         return
-    st.caption(f"Receiver: {'SUBSCRIBED' if snapshot['ready'] else 'CONNECTING'} · Run: {run_id} · MQTT packets: {snapshot['received_packets']} · DuckDB committed: {snapshot['saved_events']} · Pending sequence buffer: {snapshot['pending']}")
-    if not snapshot["ready"]:
-        st.info("Connecting to MQTT; wait for SUBACK before publishing.")
+    if mode == "Historical replay":
+        st.caption(f"Historical DuckDB snapshot · Run: {run_id} · Stored events: {snapshot['saved_events']} · No MQTT Broker required")
+    else:
+        st.caption(f"Receiver: {'SUBSCRIBED' if snapshot['ready'] else 'CONNECTING'} · Run: {run_id} · MQTT packets: {snapshot['received_packets']} · DuckDB committed: {snapshot['saved_events']} · Pending sequence buffer: {snapshot['pending']}")
+        if not snapshot["ready"]:
+            st.info("Connecting to MQTT; wait for SUBACK before publishing.")
     if not events:
         st.info("No events received for selected run.")
         return
