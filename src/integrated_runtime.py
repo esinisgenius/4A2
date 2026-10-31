@@ -117,6 +117,9 @@ class DashboardRuntime:
                 client.on_disconnect = on_disconnect
                 client.connect(self.host, self.port, 60)
                 client.loop_start()
+                # Cache already-committed payloads to avoid full DuckDB scans on every refresh.
+                snapshot_events = []
+                snapshot_last_sequence = 0
                 with AnalyticsQueries(connection=storage.con) as queries:
                     while not self.stopped.is_set():
                         if not errors.empty():
@@ -142,12 +145,17 @@ class DashboardRuntime:
                             if kind != "snapshot":
                                 raise ValueError("Unknown worker request")
                             rows = storage.con.execute(
-                                "SELECT payload FROM mqtt_events WHERE run_id=? ORDER BY sequence",
-                                [self.run_id],
+                                "SELECT sequence,payload FROM mqtt_events "
+                                "WHERE run_id=? AND sequence>? ORDER BY sequence",
+                                [self.run_id, snapshot_last_sequence],
                             ).fetchall()
-                            events = [json.loads(r[0]) for r in rows]
-                            metrics = queries.get_run_metrics(self.run_id) if events else None
-                            reply.put((True, {"events": events, "metrics": metrics,
+                            for sequence, payload in rows:
+                                if sequence != snapshot_last_sequence + 1:
+                                    raise RuntimeError("Stored events contain a sequence gap")
+                                snapshot_events.append(json.loads(payload))
+                                snapshot_last_sequence = sequence
+                            metrics = queries.get_run_metrics(self.run_id) if snapshot_events else None
+                            reply.put((True, {"events": snapshot_events.copy(), "metrics": metrics,
                                               "ready": self.ready.is_set(),
                                               "pending": len(receiver.pending),
                                               "received_packets": self.received_packets,
