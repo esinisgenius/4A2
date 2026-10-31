@@ -1,5 +1,7 @@
 # COMP5339 Assignment 2 — EV Charging Data Streaming and Analysis
 
+> **Integration branch notice:** Run the **Integrated deployment** section below for the final single-DuckDB pipeline. Later legacy sections about separate Task 3/4 subscribers are retained for development provenance, not the recommended final execution. This branch must still be packaged together with a verified `database/charger_analytics.duckdb` artifact. For the coursework ZIP, use `requirements-integrated.txt` or combine its listed packages into the root `requirements.txt` so a clean environment can install all dependencies.
+
 ## Project Status
 
 This repository is an independent A2 copy derived from the validated COMP5339 A1 project. This branch includes **P0 metadata preparation, completed Task 1 generation and Task 2 MQTT publishing**. Task 2 preserves upstream CSVs and the historical A1 submission, maps configuration-level events to physical stations, and supports ordered publishing with durable resume.
@@ -88,8 +90,7 @@ Use Python 3.12 and **all** requirements:
 ```bash
 python3 -m venv .venv
 source .venv/bin/activate
-python -m pip install -r requirements-demo.txt
-python -m pip install -r requirements-task3.txt
+python -m pip install -r requirements-integrated.txt
 ```
 
 Do this from the project root using **three** terminals:
