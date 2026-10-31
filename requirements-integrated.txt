@@ -1,2 +1,2 @@
--r requirements-demo.txt
--r requirements-task3.txt
+# Legacy alias: the root requirements now cover every integrated component.
+-r requirements.txt
