@@ -1,3 +1,2 @@
-# Optional local broker and real-MQTT integration verification (Python 3.12).
+# Legacy alias: the root requirements now include the local MQTT broker.
 -r requirements.txt
-amqtt==0.11.3
