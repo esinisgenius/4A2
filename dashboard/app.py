@@ -1,6 +1,7 @@
 """Interactive NSW station map and live MQTT projection for Task 3."""
 from html import escape
 import sys
+import re
 from pathlib import Path
 
 import duckdb
@@ -46,7 +47,7 @@ def runtime_manager():
             self.runtime = None
         def get(self, selected_run):
             with self.lock:
-                if self.runtime is None or self.runtime.run_id != selected_run:
+                if self.runtime is None or self.runtime.run_id != selected_run or self.runtime.stopped.is_set():
                     if self.runtime is not None:
                         self.runtime.close()
                     self.runtime = DashboardRuntime(selected_run)
@@ -56,8 +57,8 @@ def runtime_manager():
 
 @st.fragment(run_every="5s" if refresh else None)
 def live():
-    if not run_id:
-        st.warning("Enter a replay run ID.")
+    if not re.fullmatch(r"[A-Za-z0-9_-]{1,160}", run_id):
+        st.warning("Run ID must contain only letters, digits, underscores or hyphens.")
         return
     try:
         runtime = runtime_manager().get(run_id)
