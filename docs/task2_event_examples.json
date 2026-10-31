@@ -1,0 +1,71 @@
+{
+  "purpose": "Interface review examples only. Selected from the full prepared file; not a complete replay and NOT_PUBLISHED. Sequence numbers refer to the full file.",
+  "events": [
+    {
+      "schema_version": "1.0",
+      "dataset_id": "ds_80fb8920cf20f1c748f26b1a49fe292c8618f37a4d48f730ca47ed9dc1d081b3",
+      "event_type": "price_update",
+      "event_time": "2026-09-14T14:00:00Z",
+      "station_id": "site_c5f1f026b1395cf164d7",
+      "charger_id": "evr_269ac9b4c161e7435b206a002abfb2637f4abc9e641c56852351daefe6073aa0",
+      "price_per_kwh": 0.76,
+      "currency": "AUD",
+      "price_unit": "AUD/kWh",
+      "event_id": "evt_e1c54f934466a3d686f3297b0b4ed2c0de666b5ab6aff5daea9a4b5f20235ff0",
+      "sequence": 385
+    },
+    {
+      "schema_version": "1.0",
+      "dataset_id": "ds_80fb8920cf20f1c748f26b1a49fe292c8618f37a4d48f730ca47ed9dc1d081b3",
+      "event_type": "session_start",
+      "event_time": "2026-09-14T14:01:00Z",
+      "station_id": "site_c5f1f026b1395cf164d7",
+      "charger_id": "evr_269ac9b4c161e7435b206a002abfb2637f4abc9e641c56852351daefe6073aa0",
+      "session_id": "evr_269ac9b4c161e7435b206a002abfb2637f4abc9e641c56852351daefe6073aa0-2-202609150001",
+      "connector_id": "2",
+      "vehicle_model": "BYD Atto 3",
+      "site_type": "urban",
+      "price_per_kwh": 0.76,
+      "currency": "AUD",
+      "event_id": "evt_6277dad54d9acf63fab941fb2b5f34c8dc605489a13b03b311898aa63b0b1641",
+      "sequence": 433
+    },
+    {
+      "schema_version": "1.0",
+      "dataset_id": "ds_80fb8920cf20f1c748f26b1a49fe292c8618f37a4d48f730ca47ed9dc1d081b3",
+      "event_type": "meter",
+      "event_time": "2026-09-14T14:02:00Z",
+      "station_id": "site_c5f1f026b1395cf164d7",
+      "charger_id": "evr_269ac9b4c161e7435b206a002abfb2637f4abc9e641c56852351daefe6073aa0",
+      "session_id": "evr_269ac9b4c161e7435b206a002abfb2637f4abc9e641c56852351daefe6073aa0-2-202609150001",
+      "connector_id": "2",
+      "voltage_v": 393.2,
+      "current_a": 54.0,
+      "power_kw": 21.25,
+      "energy_kwh": 0.354,
+      "soc_pct": 47.4,
+      "event_id": "evt_e414271300664d1c0cd8b3f11ae3a9e803515c93ccfa74045270f52bc6773d74",
+      "sequence": 440
+    },
+    {
+      "schema_version": "1.0",
+      "dataset_id": "ds_80fb8920cf20f1c748f26b1a49fe292c8618f37a4d48f730ca47ed9dc1d081b3",
+      "event_type": "session_end",
+      "event_time": "2026-09-14T14:20:51Z",
+      "station_id": "site_c5f1f026b1395cf164d7",
+      "charger_id": "evr_269ac9b4c161e7435b206a002abfb2637f4abc9e641c56852351daefe6073aa0",
+      "session_id": "evr_269ac9b4c161e7435b206a002abfb2637f4abc9e641c56852351daefe6073aa0-2-202609150001",
+      "connector_id": "2",
+      "charge_end_time": "2026-09-14T14:20:00Z",
+      "currency": "AUD",
+      "energy_kwh": 13.34,
+      "charge_minutes": 19.0,
+      "avg_kw": 42.1,
+      "peak_kw": 55.8,
+      "price_per_kwh": 0.76,
+      "cost_aud": 10.13,
+      "event_id": "evt_f44a20e4df278fe2da08acb788f00129338080bdf17dc743692cf4dbd0a754aa",
+      "sequence": 564
+    }
+  ]
+}

@@ -1,0 +1,38 @@
+{
+  "checked_date_sydney": "2026-10-27",
+  "result": "PASS",
+  "full_event_count": 134162,
+  "full_counts": {
+    "price_update": 4320,
+    "session_start": 4021,
+    "meter": 121800,
+    "session_end": 4021
+  },
+  "window_event_count": 39805,
+  "window_counts": {
+    "price_update": 1296,
+    "session_start": 1269,
+    "meter": 36128,
+    "session_end": 1112
+  },
+  "window_boundary_checks": {
+    "2026-09-15T09:00:00": {
+      "active_sessions": 115,
+      "price_configurations": 432,
+      "matches_source": true
+    },
+    "2026-09-15T13:00:00": {
+      "active_sessions": 157,
+      "price_configurations": 432,
+      "matches_source": true
+    }
+  },
+  "full_source_price_meter_and_session_checks": "PASS",
+  "same_event_identity_across_files": "PASS",
+  "manifests_and_source_hashes": "PASS",
+  "inherited_tracked_files_unchanged": true,
+  "unit_tests_passed": 36,
+  "new_task2_tests": 11,
+  "publication_status": "NOT_PUBLISHED",
+  "scope_note": "Historical offline-preparation snapshot, before Publisher/shared-contract changes. Current validation: docs/task2_validation.json."
+}

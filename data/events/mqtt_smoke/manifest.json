@@ -1,0 +1,75 @@
+{
+  "preparation_status": "PASS",
+  "publication_status": "NOT_PUBLISHED",
+  "schema_version": "1.0",
+  "dataset_id": "ds_80fb8920cf20f1c748f26b1a49fe292c8618f37a4d48f730ca47ed9dc1d081b3",
+  "source_time_basis": "Fixed AEST / UTC+10 (no daylight saving)",
+  "payload_time_basis": "UTC",
+  "source_files": {
+    "stations": {
+      "path": "data/generated/stations.csv",
+      "sha256": "8393787a54226decd4b25d351bb52895211922302c63f8c0b0eb6b7a2a3ae83e"
+    },
+    "mapping": {
+      "path": "data/processed/generator_station_mapping.csv",
+      "sha256": "fbf38f72b2ba9d28190ad988f67c864286b6eba225666ca979dca071e0726516"
+    },
+    "prices": {
+      "path": "data/generated/prices_hourly.csv",
+      "sha256": "4bd7fb3a9358bfb83b01a9955a7346d3d74caf02dfd334445a6ac8a31e82bdde"
+    },
+    "sessions": {
+      "path": "data/generated/sessions.csv",
+      "sha256": "ed4a6f66614be2f35d874fce86447667f22f8dde37139dca56ca3f33450c24f2"
+    },
+    "meters": {
+      "path": "data/generated/session_metering.csv",
+      "sha256": "b81f84103a08db7c14b1a96fd09fca48ba77528a41dbab8495a9cc0e365cc78c"
+    }
+  },
+  "source_counts": {
+    "configurations": 432,
+    "hourly_prices": 10368,
+    "sessions": 4021,
+    "meters": 121800
+  },
+  "full_dataset_price_events": 4320,
+  "full_dataset_unchanged_price_rows_removed": 6048,
+  "window": {
+    "start_nem": "2026-09-15T00:20:00",
+    "end_nem_exclusive": "2026-09-15T00:22:00",
+    "start_utc": "2026-09-14T14:20:00Z",
+    "end_utc_exclusive": "2026-09-14T14:22:00Z",
+    "policy": "Sessions overlapping the window, including their real start/meter prefixes; price baseline before the earliest selected start and all subsequent changes. No fabricated ends.",
+    "history_scope": "Selected sessions only; not all activity before window start. Warmup is not a complete historical replay.",
+    "warmup_session_start_nem": "2026-09-15T00:01:00"
+  },
+  "selected_sessions": 10,
+  "event_count": 573,
+  "event_counts": {
+    "price_update": 432,
+    "session_start": 10,
+    "meter": 130,
+    "session_end": 1
+  },
+  "warmup_event_count": 553,
+  "first_event_time": "2026-09-14T14:00:00Z",
+  "last_event_time": "2026-09-14T14:21:00Z",
+  "ordering": [
+    "event_time",
+    "price_update < meter < session_end < session_start",
+    "event_id"
+  ],
+  "minimum_publish_interval_seconds": 0.1,
+  "minimum_spacing_duration_seconds": 57.2,
+  "stream_checks": {
+    "unique_events": 573,
+    "completed_sessions": 1,
+    "active_sessions_at_end": 9,
+    "configuration_prices_at_end": 432
+  },
+  "interface_status": "Task 2 contract 1.0; see docs/event_schema.md and docs/mqtt_topics.md. Publisher adds run_id.",
+  "events_file": "events.json",
+  "events_sha256": "9225479db6643829d09b92780434bf440228238832486cab646e2ca6449f2b6a",
+  "events_bytes": 280698
+}

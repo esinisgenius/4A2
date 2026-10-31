@@ -1,0 +1,214 @@
+{
+  "review_date": "2026-10-22",
+  "timezone": "Australia/Sydney",
+  "audited_commit": "c3bc1a88abfac0fef389c2ab13b80553c81bfd35",
+  "test_suite": {
+    "total": 16,
+    "passed": 16,
+    "failed": 0,
+    "python": "3.12.7"
+  },
+  "evidence": {
+    "clean_reproduction": {
+      "source_hashes": {
+        "data/input/stations.csv": true,
+        "data/processed/generator_station_mapping.csv": true,
+        "data/processed/stations_prepared.csv": true,
+        "data/processed/chargers_prepared.csv": true,
+        "vendor/data_generator/generate_dataset.py": true,
+        "data/generated/stations.csv": true,
+        "data/generated/prices_hourly.csv": true,
+        "data/generated/sessions.csv": true,
+        "data/generated/session_metering.csv": true,
+        "data/generated/aemo_cache/PRICE_AND_DEMAND_202609_NSW1.csv": true,
+        "logs/task1_generation.log": true
+      },
+      "clean_checkout_initial_hashes": {
+        "data/input/stations.csv": false,
+        "data/processed/generator_station_mapping.csv": false,
+        "data/processed/stations_prepared.csv": false,
+        "data/processed/chargers_prepared.csv": false,
+        "vendor/data_generator/generate_dataset.py": false,
+        "data/generated/stations.csv": true,
+        "data/generated/prices_hourly.csv": true,
+        "data/generated/sessions.csv": true,
+        "data/generated/session_metering.csv": true,
+        "data/generated/aemo_cache/PRICE_AND_DEMAND_202609_NSW1.csv": true,
+        "logs/task1_generation.log": true
+      },
+      "clean_run_exit_code": 0,
+      "clean_checkout_output_reproducibility": {
+        "stations.csv": true,
+        "prices_hourly.csv": true,
+        "sessions.csv": true,
+        "session_metering.csv": true
+      }
+    },
+    "failure_reproduction": {
+      "failure": "Removed final required AEMO interval in isolated clone",
+      "exit_code": 1,
+      "stderr_tail": "Traceback (most recent call last):\n  File \"C:\\Users\\LL\\Desktop\\comp5339\\tmp\\a2-task1-audit-idyvqsqa\\checkout\\src\\run_task1.py\", line 74, in <module>\n    main()\n  File \"C:\\Users\\LL\\Desktop\\comp5339\\tmp\\a2-task1-audit-idyvqsqa\\checkout\\src\\run_task1.py\", line 27, in main\n    preflight, _ = validate_aemo(cache)\n                   ^^^^^^^^^^^^^^^^^^^^\n  File \"C:\\Users\\LL\\Desktop\\comp5339\\tmp\\a2-task1-audit-idyvqsqa\\checkout\\src\\validate_task1.py\", line 68, in validate_aemo\n    require(set(selected) == expected, f\"Incomplete AEMO day: {len(selected)}/288 intervals\")\n  File \"C:\\Users\\LL\\Desktop\\comp5339\\tmp\\a2-task1-audit-idyvqsqa\\checkout\\src\\validate_task1.py\", line 27, in require\n    raise ValueError(message)\nValueError: Incomplete AEMO day: 287/288 intervals\n",
+      "reports_unchanged_after_failure": {
+        "docs/task1_validation.json": true,
+        "docs/task1_aemo_validation.json": true,
+        "docs/task1_run.json": true
+      },
+      "reported_validation_result": "PASS",
+      "reported_run_result": "PASS",
+      "input_contents_equal_after_newline_normalisation": {
+        "data/input/stations.csv": true,
+        "data/processed/generator_station_mapping.csv": true,
+        "data/processed/stations_prepared.csv": true,
+        "data/processed/chargers_prepared.csv": true,
+        "vendor/data_generator/generate_dataset.py": true
+      }
+    },
+    "coverage_probe": {
+      "mutation": "Set first meter power=99999 kW, voltage=1 V and current=1 A while leaving cumulative energy unchanged",
+      "validator_result": "PASS",
+      "interpretation": "Power/voltage/current are checked for finite positivity, not mutual consistency or consistency with energy increments."
+    },
+    "independent_audit": {
+      "audited_commit": "c3bc1a88abfac0fef389c2ab13b80553c81bfd35",
+      "unchanged_p0_files": 41,
+      "modified_p0_files": [],
+      "counts": {
+        "configurations": 432,
+        "prices": 10368,
+        "sessions": 4021,
+        "meters": 121800,
+        "session_unique_ids": 4021,
+        "session_configs_with_activity": 429
+      },
+      "independent_physics_checks": {
+        "meter_energy_increment_failures": 0,
+        "max_increment_error_kwh": 0.001000000000005441,
+        "voltage_current_power_failures": 0,
+        "max_electrical_power_error_kw": 0.046800000000004616,
+        "session_peak_power_failures": 0,
+        "session_average_power_failures": 0
+      },
+      "price_updates_after_per_configuration_dedup": 4320,
+      "unchanged_hourly_price_rows": 6048,
+      "mqtt_event_count_if_start_end_and_every_meter_are_published": 134162,
+      "minimum_replay_seconds_at_0_1_seconds_per_message": 13416.1,
+      "physical_sites_with_multiple_configuration_prices_at_same_hour": 12,
+      "same_connector_end_start_equal_timestamp_pairs": 1,
+      "total_session_energy_kwh": 101685.85,
+      "total_session_cost_aud": 68620.78,
+      "source_worktree_status": ""
+    },
+    "same_timestamp_example": [
+      {
+        "station_id": "evr_c45c467d8db73976f9d483941596682d39b53112dd6e27318a3a68f7e5ff8fc1",
+        "connector_id": 2,
+        "previous_session": "evr_c45c467d8db73976f9d483941596682d39b53112dd6e27318a3a68f7e5ff8fc1-2-202609151556",
+        "previous_end": "2026-09-15T16:28:00",
+        "session_id": "evr_c45c467d8db73976f9d483941596682d39b53112dd6e27318a3a68f7e5ff8fc1-2-202609151628",
+        "start_ts": "2026-09-15T16:28:00"
+      }
+    ],
+    "p0_validation": {
+      "src/validate_chargers.py": {
+        "exit_code": 0,
+        "result": "PASS",
+        "details": {
+          "result": "PASS",
+          "stations": 1885,
+          "chargers": 1958,
+          "dc_chargers": 433,
+          "missing_effective_power": 22,
+          "stations_with_verified_connectors": 214,
+          "checks": [
+            {
+              "check": "station_id_unique",
+              "status": "PASS",
+              "observed": 1885
+            },
+            {
+              "check": "charger_id_unique",
+              "status": "PASS",
+              "observed": 1958
+            },
+            {
+              "check": "charger_station_fk",
+              "status": "PASS",
+              "observed": 1885
+            },
+            {
+              "check": "all_stations_referenced",
+              "status": "PASS",
+              "observed": 1885
+            },
+            {
+              "check": "coordinates_valid",
+              "status": "PASS",
+              "observed": 1885
+            },
+            {
+              "check": "station_names_present",
+              "status": "PASS",
+              "observed": 0
+            },
+            {
+              "check": "addresses_present",
+              "status": "PASS",
+              "observed": 0
+            },
+            {
+              "check": "operators_present",
+              "status": "PASS",
+              "observed": 0
+            },
+            {
+              "check": "plug_counts_positive",
+              "status": "PASS",
+              "observed": 0
+            },
+            {
+              "check": "effective_power_reasonable",
+              "status": "PASS",
+              "observed": 0
+            },
+            {
+              "check": "connector_types_only_verified",
+              "status": "PASS",
+              "observed": 231
+            },
+            {
+              "check": "database_counts_match_csv",
+              "status": "PASS",
+              "observed": {
+                "stations": 1885,
+                "chargers": 1958,
+                "connector_types": 344
+              }
+            }
+          ]
+        }
+      },
+      "src/validate_generator_input.py": {
+        "exit_code": 0,
+        "result": "PASS",
+        "details": {
+          "result": "PASS",
+          "rows": 432,
+          "columns": [
+            "station_id",
+            "name",
+            "lat",
+            "lon",
+            "site_type",
+            "connectors",
+            "max_kw"
+          ],
+          "urban_rows": 282,
+          "regional_rows": 150,
+          "connectors": 1656,
+          "one_day_hourly_price_rows": 10368,
+          "generator_execution": "NOT_RUN"
+        }
+      }
+    }
+  }
+}

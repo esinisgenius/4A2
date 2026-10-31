@@ -1,0 +1,180 @@
+{
+  "verification_date": "2026-10-22",
+  "timezone": "Australia/Sydney",
+  "scope": "Task 1 fixes in working tree based on c3bc1a8",
+  "test_suite": {
+    "total": 25,
+    "passed": 25,
+    "failed": 0,
+    "command": "python -m unittest discover -s tests -v"
+  },
+  "formal_run": {
+    "result": "PASS",
+    "started_utc": "2026-10-21T20:58:23.562751+00:00",
+    "counts": {
+      "sessions": 4021,
+      "hourly_prices": 10368,
+      "meter_readings": 121800
+    }
+  },
+  "output_bytes_unchanged": {
+    "stations.csv": true,
+    "prices_hourly.csv": true,
+    "sessions.csv": true,
+    "session_metering.csv": true
+  },
+  "protected_baseline_files": {
+    "count": 41,
+    "changed": []
+  },
+  "p0_metadata_validation": {
+    "result": "PASS",
+    "stations": 1885,
+    "chargers": 1958,
+    "dc_chargers": 433,
+    "missing_effective_power": 22,
+    "stations_with_verified_connectors": 214,
+    "checks": [
+      {
+        "check": "station_id_unique",
+        "status": "PASS",
+        "observed": 1885
+      },
+      {
+        "check": "charger_id_unique",
+        "status": "PASS",
+        "observed": 1958
+      },
+      {
+        "check": "charger_station_fk",
+        "status": "PASS",
+        "observed": 1885
+      },
+      {
+        "check": "all_stations_referenced",
+        "status": "PASS",
+        "observed": 1885
+      },
+      {
+        "check": "coordinates_valid",
+        "status": "PASS",
+        "observed": 1885
+      },
+      {
+        "check": "station_names_present",
+        "status": "PASS",
+        "observed": 0
+      },
+      {
+        "check": "addresses_present",
+        "status": "PASS",
+        "observed": 0
+      },
+      {
+        "check": "operators_present",
+        "status": "PASS",
+        "observed": 0
+      },
+      {
+        "check": "plug_counts_positive",
+        "status": "PASS",
+        "observed": 0
+      },
+      {
+        "check": "effective_power_reasonable",
+        "status": "PASS",
+        "observed": 0
+      },
+      {
+        "check": "connector_types_only_verified",
+        "status": "PASS",
+        "observed": 231
+      },
+      {
+        "check": "database_counts_match_csv",
+        "status": "PASS",
+        "observed": {
+          "stations": 1885,
+          "chargers": 1958,
+          "connector_types": 344
+        }
+      }
+    ]
+  },
+  "generator_input_validation": {
+    "result": "PASS",
+    "rows": 432,
+    "columns": [
+      "station_id",
+      "name",
+      "lat",
+      "lon",
+      "site_type",
+      "connectors",
+      "max_kw"
+    ],
+    "urban_rows": 282,
+    "regional_rows": 150,
+    "connectors": 1656,
+    "one_day_hourly_price_rows": 10368,
+    "generator_execution": "NOT_RUN"
+  },
+  "isolated_failure_check": {
+    "exit_code": 1,
+    "reports": {
+      "run": {
+        "started_utc": "2026-10-21T20:59:00.248714+00:00",
+        "result": "FAIL",
+        "stage": "preflight",
+        "validation_result": "NOT_RUN",
+        "command": [
+          "C:\\Users\\LL\\Desktop\\comp5339\\COMP5339_A1\\.venv\\Scripts\\python.exe",
+          "vendor/data_generator/generate_dataset.py",
+          "--stations",
+          "data/input/stations.csv",
+          "--start",
+          "2026-09-15",
+          "--days",
+          "1",
+          "--out",
+          "data/generated",
+          "--seed",
+          "5339",
+          "--sessions-per-connector-day",
+          "3",
+          "2"
+        ],
+        "cwd": "C:\\Users\\LL\\Desktop\\comp5339\\tmp\\task1-fix-check-pitenxtg",
+        "python": "3.12.7",
+        "seed": 5339,
+        "start": "2026-09-15",
+        "days": 1,
+        "sessions_per_connector_day": [
+          3,
+          2
+        ],
+        "other_generator_options": "unchanged teacher defaults; dynamic AEMO prices; meter_every=1",
+        "text_encoding": "UTF-8 (PYTHONUTF8=1 and PYTHONIOENCODING=utf-8)",
+        "aemo_downloaded_by_this_run": false,
+        "aemo_url": "https://www.aemo.com.au/aemo/data/nem/priceanddemand/PRICE_AND_DEMAND_202609_NSW1.csv",
+        "error": "Incomplete AEMO day: 287/288 intervals",
+        "finished_utc": "2026-10-21T20:59:00.325841+00:00"
+      },
+      "aemo_validation": {
+        "result": "FAIL",
+        "stage": "preflight",
+        "error": "Incomplete AEMO day: 287/288 intervals",
+        "started_utc": "2026-10-21T20:59:00.248714+00:00",
+        "finished_utc": "2026-10-21T20:59:00.325841+00:00"
+      },
+      "validation": {
+        "result": "NOT_RUN",
+        "stage": "preflight",
+        "error": "Incomplete AEMO day: 287/288 intervals",
+        "started_utc": "2026-10-21T20:59:00.248714+00:00",
+        "finished_utc": "2026-10-21T20:59:00.325841+00:00"
+      }
+    }
+  },
+  "workspace": "C:\\Users\\LL\\Desktop\\comp5339\\tmp\\task1-fix-check-pitenxtg"
+}
