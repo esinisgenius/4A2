@@ -7,8 +7,6 @@ import json
 import os
 import queue
 import shutil
-import subprocess
-import sys
 import threading
 import time
 from pathlib import Path
@@ -45,8 +43,6 @@ class DashboardRuntime:
         self.ready = threading.Event()
         self.stopped = threading.Event()
         self.error = None
-        self.publisher = None
-        self.publisher_log = None
         self.received_packets = 0
         self.saved_events = 0
         self.thread = threading.Thread(target=self._run, daemon=True,
@@ -68,44 +64,6 @@ class DashboardRuntime:
         if not ok:
             raise RuntimeError(value)
         return value
-
-    def start_demo_replay(self):
-        """Launch the actual Task 2 publisher after MQTT SUBACK; never overwrite a run."""
-        if self.error or self.stopped.is_set() or not self.ready.is_set():
-            raise RuntimeError("Subscriber is not ready; check SUBACK and DuckDB lock.")
-        if self.publisher is not None:
-            raise RuntimeError("Publisher already launched for this run.")
-        output_dir = ROOT / "data/published" / self.run_id
-        if output_dir.exists():
-            raise RuntimeError(
-                f"Publisher checkpoint already exists for {self.run_id}; "
-                "choose a NEW run ID to start a fresh test."
-            )
-        if self.saved_events:
-            raise RuntimeError("This run has stored events; choose a fresh run ID.")
-        log_path = ROOT / "logs" / f"integrated-{self.run_id}.log"
-        log_path.parent.mkdir(parents=True, exist_ok=True)
-        self.publisher_log = log_path.open("w", encoding="utf-8")
-        try:
-            self.publisher = subprocess.Popen(
-                [sys.executable, str(ROOT / "src/publisher.py"),
-                 "--events", str(ROOT / "data/events/mqtt_demo/events.json"),
-                 "--run-id", self.run_id],
-                cwd=str(ROOT), stdout=self.publisher_log, stderr=subprocess.STDOUT,
-            )
-        except Exception:
-            self.publisher_log.close()
-            self.publisher_log = None
-            raise
-        return str(log_path)
-
-    def publication_status(self):
-        if self.publisher is None:
-            return "Not started from dashboard"
-        status = self.publisher.poll()
-        if status is None:
-            return "Publisher running"
-        return "Publisher completed" if status == 0 else f"Publisher exited with code {status}"
 
     def _run(self):
         client = None
