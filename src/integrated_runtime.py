@@ -43,6 +43,8 @@ class DashboardRuntime:
         self.ready = threading.Event()
         self.stopped = threading.Event()
         self.error = None
+        self.received_packets = 0
+        self.saved_events = 0
         self.thread = threading.Thread(target=self._run, daemon=True,
                                        name=f"duckdb-{run_id}")
         self.thread.start()
@@ -121,9 +123,11 @@ class DashboardRuntime:
                                 packet = incoming.get_nowait()
                             except queue.Empty:
                                 break
+                            self.received_packets += 1
                             for mid, qos in receiver.receive(*packet):
                                 if client.ack(mid, qos) != mqtt.MQTT_ERR_SUCCESS:
                                     raise RuntimeError("MQTT ACK failed")
+                        self.saved_events = receiver.last_sequence
                         try:
                             kind, reply = self.requests.get(timeout=0.05)
                         except queue.Empty:
@@ -139,7 +143,9 @@ class DashboardRuntime:
                             metrics = queries.get_run_metrics(self.run_id) if events else None
                             reply.put((True, {"events": events, "metrics": metrics,
                                               "ready": self.ready.is_set(),
-                                              "pending": len(receiver.pending)}))
+                                              "pending": len(receiver.pending),
+                                              "received_packets": self.received_packets,
+                                              "saved_events": receiver.last_sequence}))
                         except Exception as exc:
                             reply.put((False, str(exc)))
         except Exception as exc:
