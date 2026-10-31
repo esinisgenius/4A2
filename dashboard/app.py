@@ -47,7 +47,7 @@ def runtime_manager():
             self.runtime = None
         def get(self, selected_run):
             with self.lock:
-                if self.runtime is None or self.runtime.run_id != selected_run or self.runtime.stopped.is_set():
+                if self.runtime is None or self.runtime.run_id != selected_run:
                     if self.runtime is not None:
                         self.runtime.close()
                     self.runtime = DashboardRuntime(selected_run)
