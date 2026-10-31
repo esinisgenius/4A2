@@ -1,6 +1,6 @@
 # COMP5339 Assignment 2 — EV Charging Data Streaming and Analysis
 
-> **Final integrated workflow:** Use the three-terminal instructions in **Integrated deployment**. The root `requirements.txt` includes all packages for Broker, Publisher, Dashboard and DuckDB. Later historical Task 3/4 instructions are preserved for provenance but are **not** intended to be run together.
+> **Final integrated workflow:** Use **Integrated deployment** for live MQTT ingestion or **Historical replay** for offline viewing. The root `requirements.txt` includes all required packages. Do not launch legacy subscribers alongside the integrated dashboard.
 
 ## Project Status
 
@@ -119,7 +119,7 @@ analytics database if that file is already present. The original Task 4
 branch's prepopulated DB is a separate binary artifact; include the final
 verified DuckDB in the assignment ZIP.
 
-### Live demonstration: three separate terminals
+### Live MQTT verification: three separate terminals
 
 1. **Broker**: `python src/local_broker.py` (terminal 1).
 2. **Dashboard + single DuckDB subscriber**: `python -m streamlit run dashboard/app.py` (terminal 2). Set a new Run ID, e.g. `integration-demo-final-01`; wait for **SUBACK** in terminal 2.
@@ -179,50 +179,49 @@ runtime is not a publicly deployed authenticated service. It performs
 disk-backed atomic commits before MQTT acknowledgements and uses the Task 4
 de-duplication and sequence validation logic.
 
-## Task 3 — MQTT subscriber and clickable map
+## Historical replay (offline, no broker)
 
-Task 3 implementation: `src/subscriber.py`, `src/task3_state.py`, `dashboard/app.py`. The map uses Folium/Leaflet: **hover** shows a station's name; **click** opens a popup with its name, address, operator, plug types, plug/occupancy counts, latest charger-specific price, and raw charger ID. The map initially centers on NSW; the station selector and live meter curve remain available.
+Stop any active live ingestion in this Streamlit app before switching to
+**Historical replay**. The dashboard releases its integrated runtime and
+opens the DuckDB file in read-only mode. Choose a stored Run ID (e.g.
+`integration-final-02`). You do **not** need to start MQTT Broker or Publisher
+for this mode. The UI still reads historical event payloads to construct the
+station map and meter curves; a 134,162-event run can be slower than the
+1,091-event example.
 
-### Run (macOS/Linux)
+## Full-scale MQTT validation (optional but recommended for stress testing)
 
-From the project root with a Python virtual environment activated:
+The full stream has 134,162 events and the Task 2 publisher enforces at least
+0.1 seconds between consecutive publications. This implies at least 3h 43m
+37s of publishing time, excluding processing overhead. **Do not reuse the
+short-run IDs** already in DuckDB. On a test run, ensure the Broker is started,
+launch the integrated Dashboard in Live mode with a new Run ID, and only then
+start the Publisher with matching ID:
 
 ```bash
-python -m pip install -r requirements-demo.txt
-python -m pip install -r requirements-task3.txt
-python -m unittest discover -s tests -p 'test_task3_state.py' -v
+python src/publisher.py --events data/events/full/events.json --run-id integration-full-01
 ```
 
-Open four terminals, each at the project root with the environment activated:
+Wait for the Publisher to finish; verify the Dashboard's committed count
+is 134,162. Stop Streamlit before accessing the DuckDB file externally:
 
 ```bash
-# Terminal 1: broker (keep open)
-python src/local_broker.py
-
-# Terminal 2: subscriber — wait for SUBACK before publishing
-python src/subscriber.py --run-id team-demo-03
-
-# Terminal 3: dashboard; visit http://localhost:8501
-streamlit run dashboard/app.py
-
-# Terminal 4: publisher (only after subscriber SUBACK)
-python src/publisher.py --events data/events/mqtt_demo/events.json --run-id team-demo-03
+python scripts/verify_full_stream.py --run-id integration-full-01
 ```
 
-Select `team-demo-03` in the dashboard. Enable auto-refresh (5 seconds) to view live session progress. Disable it for stable manual map exploration if the map resets. Never run two publishers with the same run ID. Use a **fresh run ID** for each new replay across publisher, subscriber, and dashboard. The demo includes 1,091 events (864 price updates, 16 starts, 210 meters, 1 end); 15 sessions remain active at cutoff.
+The verifier compares event counts, event types, every stored JSON payload,
+completed sessions, and remaining active connectors. A prepared-stream PASS
+alone is not evidence of a full MQTT/DuckDB replay. The integrated runtime
+avoids repeatedly querying all prior rows from DuckDB, but the current
+Streamlit map/state projection still processes all previously committed
+records when refreshing; auto-refresh may be turned off for responsiveness.
 
-Windows PowerShell: activate with `.venv\\Scripts\\Activate.ps1` and invoke `python` from the activated environment.
+### Legacy modules
 
-### Task 4 integration handoff (Task 4 is NOT implemented here)
-
-- Existing A1 metadata is in `database/charger_metadata.duckdb`: `stations.station_id` identifies physical sites; `chargers.charger_id` identifies charger configurations. A station may have multiple charger configurations and different prices.
-- Live MQTT contract: `docs/event_schema.md`, `docs/mqtt_topics.md`; subscribe to `comp5339/a2/runs/{run_id}/#` at QoS 1, without retained messages. All four event types include `run_id`, `dataset_id`, `event_id`, `sequence`, `event_time`, `station_id`, and `charger_id`.
-- Deduplicate on `(run_id,event_id)`; identify sessions by `(run_id,session_id)` and occupancy by `(run_id,charger_id,connector_id)`. Keep the chosen run separate; apply events in contiguous sequence order.
-- Prices are keyed per charger configuration, not per station. `session_end` (unplug) releases occupancy; `charge_end_time` does not.
-- Task 3's `database/task3_events.sqlite` is a **local receiving journal**, NOT the required Task 4 DuckDB artifact. The Task 4 owner should independently persist incoming MQTT events in DuckDB and provide an agreed query interface (active sessions and at least one historical metric). Current dashboard metrics come from Task 3 journal only until this integration is completed.
-- For integration testing, start broker, both subscribers, then publisher; verify distinct accepted `(run_id,event_id)` counts against the run's `publish_manifest.json` and demonstrate active/completed state with sample meter curves. A broker PUBACK is not proof of Task 4 database persistence. Coordinate schema/API changes rather than modifying Task 4 source code in this branch.
-
-See `docs/task3_dashboard.md` and `docs/TASK2_TEAM_HANDOFF_ZH.md` for further details.
+`src/subscriber.py` and the standalone `src/analytics_subscriber.py` CLI are
+preserved as earlier individual Task 3/4 implementations. Do not launch
+them alongside the integrated Dashboard. The single-process integrated
+runtime remains the only recommended run path.
 
 ## Task 2 quick start
 
