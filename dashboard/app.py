@@ -24,10 +24,10 @@ st.caption("COMP5339 A2 · Task 3 · Synthetic replay; event time is UTC (NEM so
 with st.sidebar:
     run_id = st.text_input("Replay run ID", value="integration-demo-01")
     st.caption("Source: Task 4 DuckDB, single writer")
-    refresh = st.toggle("Auto-refresh every 5 seconds", value=True, help="Off by default to prevent map tile flashing; click Refresh to load new events.")
+    refresh = st.toggle("Auto-refresh every 5 seconds", value=True, help="Live metrics refresh every 5 seconds; turn off while interacting with the map.")
     if st.button("Refresh events now"):
         st.rerun()
-    st.info("Start Broker and dashboard; wait for SUBACK in the Streamlit terminal before publishing. Use a fresh run ID.")
+    st.info("Run Broker, Dashboard, and Publisher in separate terminals. Wait for SUBACK before publishing; use the same new Run ID.")
 
 @st.cache_data
 def metadata():
@@ -70,15 +70,6 @@ def live():
         st.error(f"DuckDB runtime: {exc}")
         return
     st.caption(f"Receiver: {'SUBSCRIBED' if snapshot['ready'] else 'CONNECTING'} · Run: {run_id} · MQTT packets: {snapshot['received_packets']} · DuckDB committed: {snapshot['saved_events']} · Pending sequence buffer: {snapshot['pending']}")
-    st.caption(runtime.publication_status())
-    if st.button("Start 1,091-event MQTT demo for this run", disabled=not snapshot["ready"],
-                 help="Runs the actual Task 2 Publisher. Use a new Run ID for a fresh replay.",
-                 key="integrated_demo_start"):
-        try:
-            log_path = runtime.start_demo_replay()
-            st.success(f"Publisher started. Progress log: {log_path}")
-        except (RuntimeError, OSError) as exc:
-            st.error(f"Cannot start demo: {exc}")
     if not snapshot["ready"]:
         st.info("Connecting to MQTT; wait for SUBACK before publishing.")
     if not events:
