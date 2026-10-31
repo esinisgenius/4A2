@@ -22,7 +22,7 @@ st.title("NSW EV Charging — Live Dashboard")
 st.caption("COMP5339 A2 · Task 3 · Synthetic replay; event time is UTC (NEM source uses fixed UTC+10)")
 
 with st.sidebar:
-    run_id = st.text_input("Replay run ID", value="team-demo-01")
+    run_id = st.text_input("Replay run ID", value="integration-demo-01")
     st.caption("Source: Task 4 DuckDB, single writer")
     refresh = st.toggle("Auto-refresh every 5 seconds", value=False, help="Off by default to prevent map tile flashing; click Refresh to load new events.")
     if st.button("Refresh events now"):
