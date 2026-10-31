@@ -18,16 +18,22 @@ from task3_state import project
 from integrated_runtime import DashboardRuntime
 
 st.set_page_config(page_title="NSW EV Charging Live", page_icon="⚡", layout="wide")
-st.title("NSW EV Charging — Live Dashboard")
+st.title("NSW EV Charging")
 st.caption("COMP5339 A2 · Task 3 · Synthetic replay; event time is UTC (NEM source uses fixed UTC+10)")
 
 with st.sidebar:
-    run_id = st.text_input("Replay run ID", value="integration-demo-01")
-    st.caption("Source: Task 4 DuckDB, single writer")
-    refresh = st.toggle("Auto-refresh every 5 seconds", value=True, help="Live metrics refresh every 5 seconds; turn off while interacting with the map.")
+    mode = st.radio("View", ["Live demonstration", "Historical replay"], horizontal=False)
+    if mode == "Live demonstration":
+        run_id = st.text_input("Live run ID", value="", placeholder="e.g. demo-2026-01",
+                               help="Choose a new Run ID, then use the same ID in the Publisher terminal.")
+    else:
+        run_id = st.text_input("Historical run ID", value="integration-demo-01")
+    st.caption("MQTT → single DuckDB writer → live dashboard")
+    refresh = st.toggle("Auto-refresh every 5 seconds", value=True,
+                        help="Disable temporarily to interact with map popups.")
     if st.button("Refresh events now"):
         st.rerun()
-    st.info("Run Broker, Dashboard, and Publisher in separate terminals. Wait for SUBACK before publishing; use the same new Run ID.")
+    st.caption("1. Start Broker  2. Wait for SUBACK  3. Start Publisher with the matching Run ID")
 
 @st.cache_data
 def metadata():
@@ -57,6 +63,9 @@ def runtime_manager():
 
 @st.fragment(run_every="5s" if refresh else None)
 def live():
+    if not run_id.strip():
+        st.info("Enter a new Live run ID in the sidebar, then start the Publisher with exactly the same ID. Historical records remain available under Historical replay.")
+        return
     if not re.fullmatch(r"[A-Za-z0-9_-]{1,160}", run_id):
         st.warning("Run ID must contain only letters, digits, underscores or hyphens.")
         return
