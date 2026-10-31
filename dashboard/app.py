@@ -24,7 +24,7 @@ st.caption("COMP5339 A2 · Task 3 · Synthetic replay; event time is UTC (NEM so
 with st.sidebar:
     run_id = st.text_input("Replay run ID", value="integration-demo-01")
     st.caption("Source: Task 4 DuckDB, single writer")
-    refresh = st.toggle("Auto-refresh every 5 seconds", value=False, help="Off by default to prevent map tile flashing; click Refresh to load new events.")
+    refresh = st.toggle("Auto-refresh every 5 seconds", value=True, help="Off by default to prevent map tile flashing; click Refresh to load new events.")
     if st.button("Refresh events now"):
         st.rerun()
     st.info("Start Broker and dashboard; wait for SUBACK in the Streamlit terminal before publishing. Use a fresh run ID.")
@@ -69,6 +69,7 @@ def live():
     except (RuntimeError, TimeoutError, ValueError) as exc:
         st.error(f"DuckDB runtime: {exc}")
         return
+    st.caption(f"Receiver: {'SUBSCRIBED' if snapshot['ready'] else 'CONNECTING'} · Run: {run_id} · MQTT packets: {snapshot['received_packets']} · DuckDB committed: {snapshot['saved_events']} · Pending sequence buffer: {snapshot['pending']}")
     if not snapshot["ready"]:
         st.info("Connecting to MQTT; wait for SUBACK before publishing.")
     if not events:
