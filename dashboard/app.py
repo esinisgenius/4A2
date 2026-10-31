@@ -1,5 +1,4 @@
 """Interactive NSW station map and live MQTT projection for Task 3."""
-import sqlite3
 from html import escape
 import sys
 from pathlib import Path
@@ -14,7 +13,8 @@ import streamlit as st
 
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "src"))
-from task3_state import load, project
+from task3_state import project
+from integrated_runtime import DashboardRuntime
 
 st.set_page_config(page_title="NSW EV Charging Live", page_icon="⚡", layout="wide")
 st.title("NSW EV Charging — Live Dashboard")
@@ -22,11 +22,11 @@ st.caption("COMP5339 A2 · Task 3 · Synthetic replay; event time is UTC (NEM so
 
 with st.sidebar:
     run_id = st.text_input("Replay run ID", value="team-demo-01")
-    journal = st.text_input("Subscriber journal", value=str(ROOT / "database/task3_events.sqlite"))
+    st.caption("Source: Task 4 DuckDB, single writer")
     refresh = st.toggle("Auto-refresh every 5 seconds", value=False, help="Off by default to prevent map tile flashing; click Refresh to load new events.")
     if st.button("Refresh events now"):
         st.rerun()
-    st.info("Start subscriber and wait for SUBACK before launching publisher. Each new replay requires a new run ID.")
+    st.info("Start Broker and dashboard; wait for SUBACK in the Streamlit terminal before publishing. Use a fresh run ID.")
 
 @st.cache_data
 def metadata():
@@ -37,30 +37,50 @@ def metadata():
 
 sites, chargers = metadata()
 
+@st.cache_resource
+def runtime_manager():
+    import threading
+    class Manager:
+        def __init__(self):
+            self.lock = threading.Lock()
+            self.runtime = None
+        def get(self, selected_run):
+            with self.lock:
+                if self.runtime is None or self.runtime.run_id != selected_run:
+                    if self.runtime is not None:
+                        self.runtime.close()
+                    self.runtime = DashboardRuntime(selected_run)
+                return self.runtime
+    return Manager()
+
+
 @st.fragment(run_every="5s" if refresh else None)
 def live():
-    if not run_id or not Path(journal).exists():
-        st.warning("No events yet. Start src/subscriber.py with the matching --run-id, then publish.")
+    if not run_id:
+        st.warning("Enter a replay run ID.")
         return
     try:
-        con = sqlite3.connect(f"file:{Path(journal).resolve()}?mode=ro", uri=True, timeout=3)
-        events = load(con, run_id)
-        con.close()
+        runtime = runtime_manager().get(run_id)
+        snapshot = runtime.snapshot()
+        events = snapshot["events"]
         state = project(events)
-    except (sqlite3.Error, ValueError) as exc:
-        st.error(f"Could not read valid replay state: {exc}")
+        db_metrics = snapshot["metrics"]
+    except (RuntimeError, TimeoutError, ValueError) as exc:
+        st.error(f"DuckDB runtime: {exc}")
         return
+    if not snapshot["ready"]:
+        st.info("Connecting to MQTT; wait for SUBACK before publishing.")
     if not events:
-        st.info("Subscriber journal exists, but selected run has no events.")
+        st.info("No events received for selected run.")
         return
     if state["total"] != state["applied"]:
         st.warning(f"Waiting for missing sequence #{state['next_sequence']}. Received {state['total']} unique events; applied {state['applied']}.")
     a,b,c,d = st.columns(4)
     a.metric("Applied events", state["applied"])
-    b.metric("Active sessions", len(state["active"]))
-    c.metric("Completed sessions", len(state["completed"]))
-    d.metric("Completed energy (kWh)", f"{sum(x['energy_kwh'] for x in state['completed'].values()):,.2f}")
-    st.caption("Metrics are for this selected replay only, including its warmup; not the full generated day. End-of-window active sessions remain active.")
+    b.metric("Active sessions", db_metrics["active_sessions"])
+    c.metric("Completed sessions", db_metrics["completed_sessions"])
+    d.metric("Completed energy (kWh)", f"{db_metrics['completed_energy_kwh']:,.2f}")
+    st.caption("KPIs are queried from DuckDB for this replay (including warmup), not the full generated day. End-of-window sessions remain active.")
     active_count = {}
     for e in state["active"].values():
         active_count[e["charger_id"]] = active_count.get(e["charger_id"], 0) + 1
