@@ -70,6 +70,15 @@ def live():
         st.error(f"DuckDB runtime: {exc}")
         return
     st.caption(f"Receiver: {'SUBSCRIBED' if snapshot['ready'] else 'CONNECTING'} · Run: {run_id} · MQTT packets: {snapshot['received_packets']} · DuckDB committed: {snapshot['saved_events']} · Pending sequence buffer: {snapshot['pending']}")
+    st.caption(runtime.publication_status())
+    if st.button("Start 1,091-event MQTT demo for this run", disabled=not snapshot["ready"],
+                 help="Runs the actual Task 2 Publisher. Use a new Run ID for a fresh replay.",
+                 key="integrated_demo_start"):
+        try:
+            log_path = runtime.start_demo_replay()
+            st.success(f"Publisher started. Progress log: {log_path}")
+        except (RuntimeError, OSError) as exc:
+            st.error(f"Cannot start demo: {exc}")
     if not snapshot["ready"]:
         st.info("Connecting to MQTT; wait for SUBACK before publishing.")
     if not events:
