@@ -120,6 +120,25 @@ analytics database if that file is already present. The original Task 4
 branch's prepopulated DB is a separate binary artifact; include the final
 verified DuckDB in the assignment ZIP.
 
+### One-click live smoke test (no separate Publisher terminal)
+
+With the broker and Dashboard already running, set a **new**, never-used
+Replay run ID such as `integration-click-01`. Wait for the status
+`Receiver: SUBSCRIBED` and click **Start 1,091-event MQTT demo for this run**.
+This invokes the actual Task 2 publisher in a background subprocess with
+the required 0.1-second pacing and persists its publication manifest in
+`data/published/<run-id>/`. Watch `MQTT packets` and `DuckDB committed`
+increase while auto-refresh is on. This is an optional integration test,
+not a replacement for the teacher-required generated dataset.
+
+`Receiver: SUBSCRIBED · MQTT packets: 0 · DuckDB committed: 0` is normal
+if no Publisher has sent events for exactly the selected run ID. Older
+non-retained MQTT messages cannot be retrieved by changing run IDs after
+publication. If the test fails, inspect `logs/integrated-<run-id>.log`
+for the Task 2 publisher output and the Streamlit terminal for database
+lock or MQTT errors. Never delete an existing run checkpoint to retry:
+use a new run ID.
+
 ### Evidence and verification
 
 Expected for the provided short replay, after full publication: 1,091 stored
