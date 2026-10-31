@@ -1,6 +1,6 @@
 # COMP5339 Assignment 2 — EV Charging Data Streaming and Analysis
 
-> **Integration branch notice:** Run the **Integrated deployment** section below for the final single-DuckDB pipeline. Later legacy sections about separate Task 3/4 subscribers are retained for development provenance, not the recommended final execution. This branch must still be packaged together with a verified `database/charger_analytics.duckdb` artifact. For the coursework ZIP, use `requirements-integrated.txt` or combine its listed packages into the root `requirements.txt` so a clean environment can install all dependencies.
+> **Integration branch notice:** Run the **Integrated deployment** section below for the final single-DuckDB pipeline. Later legacy sections about separate Task 3/4 subscribers are retained for development provenance, not the recommended final execution. This branch must still be packaged together with a verified `database/charger_analytics.duckdb` artifact. For the coursework ZIP, ensure the root `requirements.txt` includes the integrated dependencies so a clean environment can install all dependencies.
 
 ## Project Status
 
@@ -100,7 +100,7 @@ Do this from the project root using **three** terminals:
 python src/local_broker.py
 
 # Terminal B — start the integrated subscriber + dashboard
-streamlit run dashboard/app.py
+python -m streamlit run dashboard/app.py
 
 # Terminal C — after Terminal B shows "SUBACK: integrated DuckDB ready"
 python src/publisher.py --events data/events/mqtt_demo/events.json --run-id integration-demo-01
@@ -120,24 +120,13 @@ analytics database if that file is already present. The original Task 4
 branch's prepopulated DB is a separate binary artifact; include the final
 verified DuckDB in the assignment ZIP.
 
-### One-click live smoke test (no separate Publisher terminal)
+### Live demonstration: three separate terminals
 
-With the broker and Dashboard already running, set a **new**, never-used
-Replay run ID such as `integration-click-01`. Wait for the status
-`Receiver: SUBSCRIBED` and click **Start 1,091-event MQTT demo for this run**.
-This invokes the actual Task 2 publisher in a background subprocess with
-the required 0.1-second pacing and persists its publication manifest in
-`data/published/<run-id>/`. Watch `MQTT packets` and `DuckDB committed`
-increase while auto-refresh is on. This is an optional integration test,
-not a replacement for the teacher-required generated dataset.
+1. **Broker**: `python src/local_broker.py` (terminal 1).
+2. **Dashboard + single DuckDB subscriber**: `python -m streamlit run dashboard/app.py` (terminal 2). Set a new Run ID, e.g. `integration-demo-final-01`; wait for **SUBACK** in terminal 2.
+3. **Task 2 Publisher**: `python src/publisher.py --events data/events/mqtt_demo/events.json --run-id integration-demo-final-01` (terminal 3, only after SUBACK).
 
-`Receiver: SUBSCRIBED · MQTT packets: 0 · DuckDB committed: 0` is normal
-if no Publisher has sent events for exactly the selected run ID. Older
-non-retained MQTT messages cannot be retrieved by changing run IDs after
-publication. If the test fails, inspect `logs/integrated-<run-id>.log`
-for the Task 2 publisher output and the Streamlit terminal for database
-lock or MQTT errors. Never delete an existing run checkpoint to retry:
-use a new run ID.
+Watch `PUBACK N/1091` in terminal 3 while Dashboard shows **MQTT packets** and **DuckDB committed** increasing. The latter is the verified persisted prefix, not the Broker PUBACK count. Auto-refresh is enabled by default (5 seconds); disable it temporarily when navigating popups. Do not run the old `src/subscriber.py` or standalone Task 4 `src/analytics_subscriber.py` at the same time. Do not use an old run ID for a new replay; Publisher checkpoints are bound to a run ID. The MQTT Broker must already be running before Dashboard subscribes.
 
 ### Evidence and verification
 
