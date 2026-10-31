@@ -219,28 +219,52 @@ def live():
         ["Charger ID", "Operator", "Plugs", "Connector Types", "Price (AUD/kWh)", "Occupied"]
     ]
     st.dataframe(station_chargers, use_container_width=True, hide_index=True)
-    st.subheader("Charging progress — all sessions in selected run")
+    st.subheader("Charging progress")
     sessions = {**state["completed"], **state["active"]}
     sessions_with_readings = [e for e in sessions.values() if state["meters"].get(e["session_id"])]
     if not sessions_with_readings:
         st.info("No meter readings received yet. Wait for Publisher to send meter events (or press Refresh).")
         return
-    station_first = [e for e in sessions_with_readings if e["station_id"] == sid]
-    ordered = station_first + [e for e in sessions_with_readings if e["station_id"] != sid]
-    # Human-readable labels are scoped to the current replay and stable as new events arrive.
-    # The original session_id remains the unique internal key for MQTT/state lookup.
     session_numbers = {
         session_id: i
         for i, session_id in enumerate(
-            sorted(sessions, key=lambda sid: (sessions[sid]["sequence"], sid)), start=1
+            sorted(sessions, key=lambda x: (sessions[x]["sequence"], x)), start=1
         )
     }
+    # By default limit the dropdown to the station already selected above.
+    # Search/status filters also work across the whole run without a 4,000-item list.
+    ctrl1, ctrl2 = st.columns([1, 1])
+    with ctrl1:
+        all_stations = st.toggle("Search all stations", value=False, key="session_all_stations")
+    with ctrl2:
+        status_filter = st.selectbox("Session status", ["All", "Active", "Completed"],
+                                     key="session_status_filter")
+    search_term = st.text_input("Find session", placeholder="Enter session number, e.g. 120",
+                                key="session_search").strip().lower()
+    candidates = sessions_with_readings if all_stations else [
+        e for e in sessions_with_readings if e["station_id"] == sid
+    ]
+    candidates = [
+        e for e in candidates
+        if (status_filter == "All" or
+            (e["session_id"] in state["active"]) == (status_filter == "Active"))
+        and (not search_term or
+             search_term in str(session_numbers[e["session_id"]]) or
+             search_term in str(e["connector_id"]).lower())
+    ]
+    candidates.sort(key=lambda e: (session_numbers[e["session_id"]], e["session_id"]))
+    if not candidates:
+        st.info("No matching sessions with meter readings. Try Search all stations or clear the filters.")
+        return
+    if len(candidates) > 100:
+        st.caption(f"{len(candidates):,} matching sessions. Showing the first 100; enter a session number to narrow results.")
+        candidates = candidates[:100]
     options = {
-        f"Session {session_numbers[e['session_id']]:03d} · Connector {e['connector_id']} · "
+        f"Session {session_numbers[e['session_id']]:04d} · Connector {e['connector_id']} · "
         f"{'Active' if e['session_id'] in state['active'] else 'Completed'}": e["session_id"]
-        for e in ordered
+        for e in candidates
     }
-    chosen = st.selectbox("Session with meter readings", options.keys(), key="task3_session")
+    chosen = st.selectbox("Session with meter readings", list(options), key="task3_session")
     readings = state["meters"][options[chosen]]
     df = pd.DataFrame(readings).sort_values("event_time")
     df["event_time"] = pd.to_datetime(df["event_time"], utc=True)
