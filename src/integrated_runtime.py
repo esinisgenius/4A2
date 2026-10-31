@@ -14,9 +14,15 @@ from pathlib import Path
 import duckdb
 import paho.mqtt.client as mqtt
 
-from analytics_storage import AnalyticsStorage, DEFAULT_DATABASE
-from analytics_subscriber import OrderedReceiver
-from analytics_queries import AnalyticsQueries
+try:
+    from .analytics_storage import AnalyticsStorage, DEFAULT_DATABASE
+    from .analytics_subscriber import OrderedReceiver
+    from .analytics_queries import AnalyticsQueries
+except ImportError:
+    # Support direct script imports when src/ is on sys.path (Streamlit entry point).
+    from analytics_storage import AnalyticsStorage, DEFAULT_DATABASE
+    from analytics_subscriber import OrderedReceiver
+    from analytics_queries import AnalyticsQueries
 
 ROOT = Path(__file__).resolve().parents[1]
 SCHEMA = ROOT / "database/analytics_schema.sql"
