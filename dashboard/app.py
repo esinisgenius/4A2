@@ -193,16 +193,38 @@ def live():
             tooltip=str(site.station_name),
             popup=folium.Popup(popup_html, max_width=315, min_width=265),
         ).add_to(cluster)
-    st_folium(m, height=510, use_container_width=True, key="task3_station_map",
-              returned_objects=[])
-    # Show human-friendly station names while keeping the original station IDs internally.
-    # Append a short numeric label only for duplicate names.
+    map_result = st_folium(
+        m, height=510, use_container_width=True, key="task3_station_map",
+        returned_objects=["last_object_clicked"],
+    )
+    # Folium's clicked marker coordinates identify its underlying physical station.
+    # Ordinary map clicks must not change the selected station.
     name_counts = geo["station_name"].value_counts()
     station_labels = {
         (f"{row.station_name} · Station {i:03d}" if name_counts[row.station_name] > 1 else row.station_name): row.station_id
         for i, row in enumerate(geo.sort_values(["station_name", "station_id"]).itertuples(index=False), start=1)
     }
-    selected = st.selectbox("Station details", list(station_labels), index=0)
+    labels_by_id = {station_id: label for label, station_id in station_labels.items()}
+    widget_key = "task3_selected_station"
+    if st.session_state.get(widget_key) not in station_labels:
+        st.session_state[widget_key] = next(iter(station_labels))
+    clicked = (map_result or {}).get("last_object_clicked")
+    if isinstance(clicked, dict) and "lat" in clicked and "lng" in clicked:
+        click_signature = (run_id, float(clicked["lat"]), float(clicked["lng"]))
+        if st.session_state.get("task3_last_marker_click") != click_signature:
+            st.session_state["task3_last_marker_click"] = click_signature
+            # A tiny coordinate tolerance prevents selecting a station on a
+            # background-map click. Coincident stations follow stable station order.
+            candidates = geo[
+                (geo["latitude"] - click_signature[1]).abs() < 0.00001
+            ]
+            candidates = candidates[
+                (candidates["longitude"] - click_signature[2]).abs() < 0.00001
+            ]
+            if not candidates.empty:
+                clicked_station_id = sorted(candidates["station_id"])[0]
+                st.session_state[widget_key] = labels_by_id[clicked_station_id]
+    selected = st.selectbox("Station details", list(station_labels), key=widget_key)
     sid = station_labels[selected]
     st.write("**Address:**", geo.loc[geo["station_id"] == sid, "address"].iloc[0])
     station_chargers = details.loc[details["station_id"] == sid,
