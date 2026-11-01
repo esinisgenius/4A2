@@ -1,256 +1,451 @@
-# COMP5339 Assignment 2 — NSW EV Charging Data Streaming and Analysis
+# NSW EV Charging — Streaming, Storage and Interactive Dashboard
 
-This repository contains an integrated solution for **synthetic EV charging data generation, ordered MQTT publishing, event subscription, DuckDB storage, and an interactive NSW charging-station dashboard**. The workflow reuses validated station and charger metadata from Assignment 1.
+**COMP5339 Data Engineering · Assignment 2 · 2026 Semester 2**
 
-> **Use the integrated workflow below.** The Streamlit app contains the **only active MQTT subscriber and DuckDB writer**. Do not launch `src/subscriber.py` or the standalone `src/analytics_subscriber.py` alongside it.
+This project simulates electric-vehicle charging activity across New South Wales (NSW). It builds on the station and charger metadata from Assignment 1, generates hourly electricity prices and charging sessions, publishes an ordered stream of MQTT events, stores them in DuckDB, and visualises live and historical charging activity on an interactive map.
 
-## 1. Project overview
+**Start here:** If you are marking or testing this submission for the first time, follow **Section 1 (Quick start)**. The three terminal commands below are all you need for a live demonstration of the included short replay.
 
-| Assignment component | Implementation | Output |
-| --- | --- | --- |
-| Task 1 — Synthetic dataset | Teacher-provided generator with prepared NSW chargers and AEMO prices | Hourly prices, sessions, minute meter readings |
-| Task 2 — Event publishing | `src/prepare_events.py`, `src/publisher.py` | Validated ordered JSON events, MQTT QoS 1 messages |
-| Task 3 — Live visualisation | `dashboard/app.py`, `src/integrated_runtime.py` | NSW map, marker details, live charging curves |
-| Task 4 — Stateful analytics | `src/analytics_storage.py`, `src/analytics_queries.py`, `database/analytics_schema.sql` | Persistent events, live occupancy, historical session metrics |
+## 1. Quick start — run the live demonstration
 
-### Architecture
+### 1.1 Prerequisites and project files
 
-```text
-Assignment 1 metadata ───────────┐
-                                 │
-Task 1 generated CSVs            │
-          │                      │
-          ▼                      ▼
-Task 2 event preparation     DuckDB station/charger metadata
-          │                      │
-          ▼                      │
-Ordered MQTT Publisher           │
-          │                      │
-          ▼                      │
-Local MQTT Broker                │
-          │                      │
-          ▼                      │
-Streamlit-integrated subscriber  │
-          └──────────┬───────────┘
-                     ▼
-            charger_analytics.duckdb
-                     │
-                     ▼
-        Streamlit NSW map and analytics
-```
+- Python **3.12** and an internet connection to install dependencies; no Docker or external MQTT account is required.
+- Extract the entire submitted ZIP to a folder. **Keep the folder structure unchanged.**
+- Open a terminal **inside the extracted project root** (the folder containing `README.md`, `requirements.txt`, `src/`, `dashboard/` and `database/`).
+- The ZIP includes the prepared short event stream `data/events/mqtt_demo/events.json` and the validated metadata database `database/charger_metadata.duckdb`. You do **not** need to regenerate data before running the demo.
 
-**Data ownership:** the integrated subscriber writes every accepted event and its derived state atomically to DuckDB. Dashboard metrics come from DuckDB; historical viewing also reads the persisted event payloads. Legacy SQLite files are not part of the integrated runtime.
-
-## 2. Repository structure
-
-```text
-config/                         Operator aliases and settings
-data/
-  source/                       Retained A1 source data
-  input/                        Prepared generator input
-  processed/                    A1/P0 prepared metadata
-  generated/                    Task 1 generated CSV outputs
-  events/mqtt_demo/events.json  Small 1,091-event integration replay
-  events/full/events.json       Full 134,162-event stream (local; Git-ignored)
-  events/full/manifest.json     Full-stream preparation manifest
-  published/                    Per-run publisher checkpoints and evidence
-database/
-  charger_metadata.duckdb       Validated stations and charger configurations
-  charger_analytics.duckdb      MQTT-ingested events and derived analytics (local artifact)
-  analytics_schema.sql          Task 4 tables and views
-dashboard/app.py                 Streamlit/Folium/Plotly user interface
-src/
-  run_task1.py                  Reproduce Task 1
-  validate_task1.py             Validate generated Task 1 data
-  prepare_events.py             Generate validated event stream
-  publisher.py                  Ordered MQTT publisher
-  local_broker.py               Local MQTT broker
-  integrated_runtime.py         Single subscriber/DuckDB writer and snapshots
-  analytics_storage.py          Event transactions and derived-state updates
-  analytics_subscriber.py       Ordered receiver logic; standalone CLI is legacy
-  analytics_queries.py          Current and historical DuckDB queries
-  task3_state.py                Deterministic projection utility (legacy SQLite helpers unused)
-scripts/
-  verify_full_stream.py         Full event integrity and DuckDB reconciliation
-  check_submission.py           Submission ZIP content checker
-tests/                           Automated unit and integration tests
-docs/                            Task-specific data, schema and publisher documentation
-requirements.txt                 Integrated runtime and testing dependencies
-README.md
-```
-
-`data/events/full/events.json` and `database/charger_analytics.duckdb` are **not guaranteed to be present in a Git clone**. They are local deliverable artifacts and **must be included in the final submission ZIP**. If the full JSON is absent, regenerate it from the supplied Task 1 outputs using the instructions below.
-
-## 3. Environment setup
-
-Tested with **Python 3.12**. Run commands from the repository root.
+**macOS / Linux — one-time environment setup:**
 
 ```bash
-python3 -m venv .venv
+python3.12 -m venv .venv
 source .venv/bin/activate
 python -m pip install -r requirements.txt
 ```
 
-On Windows PowerShell, activate using `.venv\Scripts\Activate.ps1`. The root requirements file includes the local aMQTT broker, Paho MQTT, DuckDB, Streamlit, Folium and Plotly.
+If `python3.12` is unavailable but `python3 --version` reports Python 3.12, replace `python3.12` with `python3` in the first command.
 
-No external MQTT service, Docker installation or cloud database is required. The broker uses **127.0.0.1:1883**. Map tiles from OpenStreetMap require internet access; local MQTT ingestion and database processing do not.
+**Windows PowerShell — one-time environment setup:**
 
-## 4. Run the complete system — live MQTT
+```powershell
+py -3.12 -m venv .venv
+.\.venv\Scripts\Activate.ps1
+python -m pip install -r requirements.txt
+```
 
-Open **three terminals**, activate the same environment, and run each command from the repository root.
+If PowerShell blocks activation, use `.\.venv\Scripts\python.exe` instead of `python` for all commands below (no activation required). The following terminal examples use `python` and assume the environment is activated.
 
-**Terminal A — start the broker**
+### 1.2 Open THREE terminals in this exact order
+
+All three terminals must have the project root as their working directory and use the same Python environment.
+
+| Order | Terminal | Program | Keep it open? |
+| --- | --- | --- | --- |
+| **1** | A | MQTT Broker | Yes, throughout the live demo |
+| **2** | B | Streamlit Dashboard **and built-in Subscriber** | Yes, throughout the live demo |
+| **3** | C | MQTT Publisher | Start **only after** Terminal B confirms SUBACK |
+
+**TERMINAL A — Start the local MQTT Broker**
 
 ```bash
 python src/local_broker.py
 ```
 
-**Terminal B — start the integrated dashboard and subscriber**
+Expected terminal output includes:
+
+```text
+Local MQTT broker ready at 127.0.0.1:1883; Ctrl+C to stop
+```
+
+**Leave Terminal A running.** This is a local MQTT server; no cloud service is necessary.
+
+**TERMINAL B — Start the Dashboard and integrated MQTT Subscriber**
+
+In a **new** terminal (do not stop Terminal A):
 
 ```bash
 python -m streamlit run dashboard/app.py
 ```
 
-Open **http://localhost:8501**. Select **Live demonstration** and enter a **new Run ID**, for example `integration-demo-new-01`. Wait for `SUBACK: integrated DuckDB ready for integration-demo-new-01` in Terminal B before publishing.
+Open **http://localhost:8501** in a browser. The URL works on the **same computer** where Streamlit runs, not on an external computer.
 
-**Terminal C — publish the provided short stream**
+At the top of the dashboard, set:
 
-```bash
-python src/publisher.py --events data/events/mqtt_demo/events.json --run-id integration-demo-new-01
+| Dashboard control (exact UI label) | What to choose |
+| --- | --- |
+| **View** | `Live demonstration` |
+| **Run ID** | Enter **`marker-demo-01`** (or a different fresh, unused ID) |
+| **Auto-refresh (5s)** | **On** |
+
+**Important:** the Live Run ID field starts empty. Entering the ID starts the integrated subscriber. Wait until Terminal B prints:
+
+```text
+SUBACK: integrated DuckDB ready for marker-demo-01
 ```
 
-The Run ID must match the dashboard exactly. Keep the broker and dashboard running during publication. Observe the committed event count and charging-session progress as messages arrive.
+The dashboard should also say **Receiver: SUBSCRIBED**. **Do not start the Publisher before this point.** Use the same Run ID in both places.
 
-**Expected short-replay result:** 1,091 committed events (864 price updates, 16 session starts, 210 meter events, one session end), 15 active sessions at the replay cutoff, one completed session and approximately 44.13 kWh completed energy.
+**TERMINAL C — Publish the included 1,091-event demonstration stream**
 
-**Run isolation:** use a fresh Run ID for a fresh publication. A previously completed Run ID must not be reused for a new dataset. Publisher checkpoints, receipts and recovery options are documented in [Task 2 publishing](docs/task2_publishing.md).
+In a **third** terminal, with Terminals A and B still running:
 
-## 5. Historical replay — without MQTT
+```bash
+python src/publisher.py --events data/events/mqtt_demo/events.json --run-id marker-demo-01
+```
 
-Previously ingested events remain in `database/charger_analytics.duckdb` after a restart.
+This publishes **1,091 ordered MQTT events at QoS 1**, with a minimum interval of **0.1 seconds**. The replay requires **at least 109.1 seconds** plus processing overhead. Leave all three terminals running until the Publisher finishes.
 
-1. Stop any active publisher and the previous Streamlit process.
-2. Start **only** the dashboard: `python -m streamlit run dashboard/app.py`.
-3. Select **Historical replay**.
-4. Enter a stored Run ID, such as `integration-full-02` **if the supplied DuckDB contains that run**.
-5. Turn off **Auto-refresh (5s)** when exploring large historical runs.
+### 1.3 What to check in the Dashboard
 
-**No broker or Publisher is required** for Historical replay. The map supports marker selection → Station details → station-filtered session selection → meter chart. Search/status filters help navigate large session lists.
+During the live replay:
 
-Historical mode requires the supplied analytics database to contain the selected Run ID. A fresh metadata-only database has no historical events.
+1. **Applied events** increases as messages are successfully committed to DuckDB.
+2. The **NSW map** displays physical charging stations. Nearby markers may be grouped: zoom in or click a cluster to reveal individual markers.
+3. **Click a station marker** to open a popup showing its station/charger details, connector information, latest price and occupancy. The **Station details** selector should follow your marker selection.
+4. Under the selected station, use **Session status** (`All`, `Active`, `Completed`) and **Find session** to locate a session with meter readings. Select it in **Session with meter readings**.
+5. Switch the **Live meter curve** between **Cumulative energy (kWh)** and **Power (kW)**. With **Auto-refresh (5s)** enabled, additional meter messages extend the time-series chart.
 
-## 6. Data generation and event preparation
+**Important interpretation of the demo:** The first ~864 records are predominantly `price_update` messages. It is **normal for Active sessions to show 0 at the beginning**. Charging sessions appear later when `session_start` events have been applied. You may need to select a station that actually has a session in this short replay; not every station is active.
 
-The verified Task 1 output contains:
+**Expected counts after successful completion of this specific short replay:**
 
-| Source dataset | Records |
+| Metric | Expected value |
 | --- | ---: |
-| Physical stations / DC charger configurations | 414 / 432 |
-| Hourly price records | 10,368 |
-| Charging sessions | 4,021 |
-| Meter readings | 121,800 |
+| Applied / committed events | **1,091** |
+| Price-update events | 864 |
+| Session starts | 16 |
+| Meter events | 210 |
+| Session ends | 1 |
+| Active sessions remaining at the selected replay cutoff | **15** |
+| Completed sessions | **1** |
+| Completed charging energy | **approximately 44.13 kWh** |
 
-The full prepared MQTT stream contains:
+The data represents a **simulated time window**, not real-world charger availability. The short dataset deliberately leaves 15 sessions active at its cutoff. The original event timestamps are retained, while messages are transmitted sequentially at the configured replay pace.
 
-| MQTT event type | Events |
-| --- | ---: |
-| `price_update` (initial prices and actual changes only) | 4,320 |
-| `session_start` | 4,021 |
-| `meter` | 121,800 |
-| `session_end` | 4,021 |
-| **Total** | **134,162** |
+### 1.4 Repeat the live demo
 
-Reproduce the Task 1 outputs (only if necessary):
+A new live publication must use a **new Run ID** to avoid clashing with old publisher checkpoints and committed database events. For example, change the dashboard Run ID to `marker-demo-02`, wait for its new SUBACK, then run:
+
+```bash
+python src/publisher.py --events data/events/mqtt_demo/events.json --run-id marker-demo-02
+```
+
+Do not reuse `marker-demo-01` unless explicitly continuing an interrupted publisher run using `--resume` as documented in [publisher details](docs/task2_publishing.md).
+
+### 1.5 Stop the programs
+
+Once you finish the live test, use **Ctrl+C** in Terminal C (if still active), then Terminal B, then Terminal A. **Stop Streamlit before opening the analytics database from an external verification script**, because DuckDB can hold a file lock while the app is running.
+
+---
+
+## 2. Historical replay — run without MQTT
+
+Use this to inspect events already persisted in the supplied DuckDB database. **Only one terminal is needed. No Broker and no Publisher.**
+
+1. Stop any currently running Streamlit instance and MQTT Publisher.
+2. Open one terminal in the project root and activate the virtual environment.
+3. Run:
+
+   ```bash
+   python -m streamlit run dashboard/app.py
+   ```
+
+4. Open **http://localhost:8501**.
+5. Set **View → Historical replay**.
+6. In **Run ID**, **replace the default value** with **`integration-full-02`**, provided this Run ID is present in the submitted `database/charger_analytics.duckdb`.
+7. Switch **Auto-refresh (5s)** **Off** for easier interaction with large runs.
+8. Look for the caption **Historical DuckDB snapshot**, then inspect the four KPI cards and map. Click a station marker, pick a station-associated session, and select an energy/power curve.
+
+The completed full replay used **134,162 events** with sequence numbers **1 through 134,162**. It contains **4,021 session starts and 4,021 session ends**, so a completed full run should show **0 active and 4,021 completed sessions**. This is **different from the short live replay**, whose cutoff deliberately leaves 15 active sessions.
+
+If `integration-full-02` returns no records, the supplied DuckDB copy may not contain that run; check which Run IDs it includes. Do not assume the default `integration-demo-01` refers to the full dataset. Historical replay needs an existing populated `charger_analytics.duckdb`; it cannot create historical events by itself.
+
+---
+
+## 3. What the project does — architecture and data flow
+
+### 3.1 End-to-end system overview
+
+```text
+                      PREPARATION (offline)
+┌────────────────────────────┐        ┌──────────────────────────────┐
+│ Assignment 1 NSW metadata  │        │ AEMO NSW electricity prices  │
+│ stations, chargers, coords  │        │ + supplied synthetic generator│
+└──────────────┬─────────────┘        └─────────────┬────────────────┘
+               │                                    │
+               └────────────────┬───────────────────┘
+                                ▼
+                 Task 1 generated CSV datasets
+                 (prices, sessions, meter readings)
+                                │
+                                ▼
+                      Event preparation
+                      src/prepare_events.py
+            validation + ordering + price-change filtering
+                                │
+                                ▼
+                 data/events/.../events.json
+                 4 event types + sequence numbers
+
+                       LIVE STREAMING
+                                │
+                                ▼
+              MQTT Publisher — src/publisher.py
+                   QoS 1; >= 0.1 s/message
+                                │
+                                ▼
+              MQTT Broker — src/local_broker.py
+                        127.0.0.1:1883
+                                │
+                                ▼
+        Integrated MQTT Subscriber — src/integrated_runtime.py
+            validates, orders, deduplicates messages
+                                │
+                                ▼
+          DuckDB — database/charger_analytics.duckdb
+           raw events + current price/occupancy/session state
+                                │
+                                ▼
+                Streamlit — dashboard/app.py
+           NSW map, popups, meter curves, run-level KPIs
+                                ▲
+                                │
+             Historical replay reads DuckDB directly
+                   (no Broker/Publisher needed)
+```
+
+### 3.2 Responsibilities of the components
+
+| Component | Source | Purpose |
+| --- | --- | --- |
+| Station and charger metadata | `database/charger_metadata.duckdb` | Validated physical NSW sites, operators, coordinates, connector configurations |
+| Synthetic dataset generation | `src/run_task1.py` and supplied generator in `vendor/` | Create hourly prices, charging sessions and per-minute meter data |
+| Offline preparation | `src/prepare_events.py` | Map generator charger IDs to physical stations, remove unchanged prices, validate and sort JSON events |
+| Ordered MQTT Publisher | `src/publisher.py` | Publish one event per message, wait for PUBACK, support checkpoint/retry/resume |
+| Local Broker | `src/local_broker.py` | Route published MQTT messages to the subscriber |
+| Integrated receiver | `src/integrated_runtime.py`, `src/analytics_subscriber.py` | Subscribe to selected Run ID, check sequence ordering and duplicate identity, manually acknowledge persisted events |
+| DuckDB storage and queries | `src/analytics_storage.py`, `src/analytics_queries.py`, `database/analytics_schema.sql` | Persist raw JSON and transactional derived state; query live and historical metrics |
+| Dashboard | `dashboard/app.py`, `src/task3_state.py` | Show interactive NSW station map, latest price, occupancy, sessions and meter charts |
+
+**Important architectural decision:** Only **one integrated MQTT Subscriber and one DuckDB writer** operate during the recommended live workflow. The Streamlit process manages this receiver internally. **Do not start a separate `src/subscriber.py` or standalone `src/analytics_subscriber.py` process at the same time.** This avoids inconsistent duplicate processing and DuckDB writer contention.
+
+**Run IDs** separate independent replays. Always use the identical Run ID in the dashboard and Publisher for live mode. Raw and derived records in DuckDB are scoped by Run ID, preventing a short replay from being mixed with the 134,162-event historical run.
+
+### 3.3 Event types and state updates
+
+| Event type | Meaning | Subscriber / analytics update |
+| --- | --- | --- |
+| `price_update` | Initial or changed electricity price for one charger configuration | Updates current `price_per_kwh` |
+| `session_start` | Vehicle starts a charging session on a connector | Creates active session and marks connector occupied |
+| `meter` | Minute-level readings including `power_kw` and cumulative `energy_kwh` | Updates progress and supports energy/power curves |
+| `session_end` | Vehicle unplugs and the session closes | Completes session, records final measures, releases connector |
+
+The message topic includes the replay ID, physical station ID, charger configuration ID and event type. Events are ordered by simulated event time; ties are deterministically resolved. Source generator times are on a fixed NEM clock (UTC+10), then converted to UTC in MQTT payloads.
+
+The integrated receiver uses MQTT 3.1.1 **QoS 1**, handles duplicate/out-of-order deliveries and acknowledges events after successful database commits. The raw event and derived state changes share a DuckDB transaction; the UI reads committed state. The generated input is **synthetic**, not a live feed from NSW charging providers.
+
+---
+
+## 4. Where the data comes from — scale and expected results
+
+### 4.1 Generated datasets
+
+The supplied synthetic generator uses the validated NSW metadata and AEMO-derived electricity-price inputs. These are the verified project outputs:
+
+| Dataset | File | Count |
+| --- | --- | ---: |
+| Charger configurations | `data/generated/stations.csv` | **432**, representing 414 physical sites |
+| Hourly prices | `data/generated/prices_hourly.csv` | **10,368** |
+| Charging sessions | `data/generated/sessions.csv` | **4,021** |
+| Minute meter readings | `data/generated/session_metering.csv` | **121,800** |
+
+### 4.2 Prepared MQTT streams
+
+| Event type | Short demo | Full event stream |
+| --- | ---: | ---: |
+| `price_update` | 864 | 4,320 |
+| `session_start` | 16 | 4,021 |
+| `meter` | 210 | 121,800 |
+| `session_end` | 1 | 4,021 |
+| **Total** | **1,091** | **134,162** |
+
+- **Short demonstration:** `data/events/mqtt_demo/events.json` — practical for a live walkthrough; chosen around 15 September 2026, 00:59–01:02 NEM, including the starting state needed to interpret events.
+- **Full preparation:** `data/events/full/events.json` — all prepared events, including sessions extending beyond the generation day. The corresponding `manifest.json` records preparation validation and file checksum.
+- **Published evidence:** `data/published/<run-id>/` — publisher checkpoint, broker-acknowledged events and publication manifest.
+- **Persisted results:** `database/charger_analytics.duckdb` — actual messages ingested into DuckDB for each replay Run ID.
+
+The full stream must be present in the **submitted ZIP even though it may be excluded by Git**. The updated analytics DuckDB must also be included for Historical replay.
+
+### 4.3 Optional: reproduce or verify generated data
+
+Do **not** regenerate data for the basic short live demo or for viewing an already-populated historical database.
+
+To regenerate Task 1 (the AEMO input cache must exist, otherwise the generator may need network access):
 
 ```bash
 python src/run_task1.py
 python src/validate_task1.py
 ```
 
-Task 1 may need its retained AEMO cache or network access if the required source cache is absent. See [Task 1 results](docs/task1_results.md).
-
-Prepare the complete event JSON from existing generated CSVs and check its integrity:
+To recreate the full ordered events from the Task 1 CSVs:
 
 ```bash
 python src/prepare_events.py
+```
+
+To validate the prepared full JSON, independently of MQTT:
+
+```bash
 python scripts/verify_full_stream.py
 ```
 
-The latter checks the entire prepared stream, including file SHA-256, event counts and ordering. **This offline PASS is not proof that MQTT delivered the stream.** The manifest deliberately retains `publication_status: NOT_PUBLISHED`; actual publication evidence belongs to the individual Publisher Run.
+The script distinguishes **prepared-data integrity** from **actual MQTT/DB delivery**. A valid preparation manifest does not itself prove that the events were published.
 
-See [event contract](docs/event_schema.md), [topics](docs/mqtt_topics.md), and [Task 2 preparation](docs/task2_events.md) for field semantics, timestamp handling and windowed replays.
+---
 
-## 7. Full-stream MQTT/DuckDB verification
+## 5. Database design, dashboard displays and verification
 
-The complete 134,162-event sequence was observed in the local DuckDB under **`integration-full-02`**, with sequences **1 through 134,162**. The full-stream preparation manifest passed its integrity validation. **Run the payload-level reconciliation below to independently confirm byte-content equivalence and final session state**; do not claim that stronger result until the checker prints PASS.
+### 5.1 DuckDB design
 
-To run a **new** full publication (only if necessary), start Broker and Dashboard as in Section 4, select a fresh Run ID (e.g. `integration-full-new-01`), wait for SUBACK, and execute:
+The integrated analytics database is initialized using the Assignment 1 metadata and the DDL in `database/analytics_schema.sql`. Important structures:
 
-```bash
-python src/publisher.py --events data/events/full/events.json --run-id integration-full-new-01
-```
+| Object | Description |
+| --- | --- |
+| `mqtt_events` | Raw JSON events, event time, Run ID, event ID and sequence |
+| `charger_current_state` | Latest price for each charger within a Run ID |
+| `charging_sessions` | Active/completed sessions and most recent/final charging metrics |
+| `active_connectors` | Occupied connector assignments |
+| `meter_history` (view) | Time-series readings extracted from raw meter events |
+| `run_session_metrics` (view) | Run-specific active sessions, completed sessions, completed energy |
 
-The assignment requires at least **0.1 seconds between MQTT messages**. The full run therefore takes at least approximately **3 hours 44 minutes**, excluding processing overhead. Do not reuse `integration-full-02` for a new publication.
+The schema maintains primary/unique constraints to prevent duplicate logical events and conflicting sequence positions. Maintaining separate current-state tables avoids repeatedly recomputing all state from raw events for every analytics query. The meter and metrics objects are **views, not materialized tables**.
 
-To verify the **already ingested** full run, first **stop Streamlit** so DuckDB releases its file lock, then run:
+### 5.2 Dashboard UI reference
+
+| UI element | What it shows / how to use it |
+| --- | --- |
+| **Applied events** | Count of valid events applied for the selected Run ID |
+| **Active sessions** | Open charging sessions at the current replay cutoff |
+| **Completed sessions** | Sessions closed by a `session_end` event |
+| **Completed energy (kWh)** | Total final energy from completed sessions |
+| **Station map** | NSW physical stations, clustered for readability |
+| **Marker popup** | Station details, charger operator, connector/plug information, latest price, occupancy |
+| **Station details** | Selected station's charger configurations; follows marker clicks |
+| **Session status** / **Find session** | Limit the session list to the chosen station and selected status/search |
+| **Session with meter readings** | Select one charging session for time-series plotting |
+| **Live meter curve** | Toggle cumulative energy (kWh) or instantaneous power (kW) |
+
+**Pricing/occupancy interpretation:** Values reflect the **currently applied simulated event sequence**. A station cannot display a new price before its `price_update` event arrives; an occupied connector becomes free only after the corresponding `session_end` event.
+
+### 5.3 Verify the already-ingested complete run (optional)
+
+The team completed a full MQTT-to-DuckDB replay with Run ID **`integration-full-02`**: **134,162 persisted events**, with sequence numbers from **1 to 134,162**; the saved run was then inspected through the Historical replay dashboard.
+
+To independently check exact stored payloads against the full prepared JSON, **first stop Streamlit** so the database lock is released, then run:
 
 ```bash
 python scripts/verify_full_stream.py --run-id integration-full-02
 ```
 
-The final line should read:
+**Expected success line if the submitted database contains that run and all records match:**
 
 ```text
 PASS MQTT/DuckDB run integration-full-02: all 134162 stored payloads match exactly
 ```
 
-This command compares record counts, sequence continuity, event-type totals, every stored JSON payload, completed sessions and remaining active connectors. If it reports zero events for the given Run ID, inspect stored Run IDs before replaying; the data might simply be under another Run ID.
+Do not confuse a prior successful **event-count/sequence check** with a successful **payload-by-payload match**. This command performs the stronger comparison; its result should be treated as verified only when it actually prints PASS.
 
-## 8. DuckDB schema and analysis
-
-`database/analytics_schema.sql` extends the validated Assignment 1 station and charger metadata with:
-
-- `mqtt_events`: raw received JSON, run ID, sequence, type and event time.
-- `charger_current_state`: latest price per charger and run.
-- `charging_sessions`: active/completed session lifecycle and results.
-- `active_connectors`: current connector occupancy.
-- `meter_history`: view of time-series meter readings.
-- `run_session_metrics`: view of active sessions, completed sessions and completed energy.
-
-The dashboard uses these records for current-state KPIs and historical session metrics; station mapping is linked to validated metadata rather than inferred from marker location. Raw payloads and derived state are written within the same transaction.
-
-## 9. Testing and troubleshooting
-
-Run automated tests:
+### 5.4 Automated tests
 
 ```bash
 python -m unittest discover -s tests -v
 ```
 
-| Symptom | Resolution |
+The tests cover input preparation, event ordering, publishing and receiving, state transitions and dashboard-related logic. Use the same Python environment installed from the root `requirements.txt`.
+
+---
+
+## 6. Troubleshooting — practical fixes
+
+| Issue | Check / fix |
 | --- | --- |
-| `No events received` | Confirm the dashboard and publisher use the same **new** Run ID, and wait for SUBACK before starting publication. |
-| DuckDB `Conflicting lock` | Stop Streamlit and other Python processes opening `charger_analytics.duckdb` before running the external verifier. Never delete the database to resolve a lock. |
-| Historical Run ID returns no records | Query the stored runs; the completed full run is `integration-full-02` in the tested local database. |
-| Historical mode is slow | Disable five-second Auto-refresh. The UI still reconstructs the selected run's historical projection. |
-| Markers appear without basemap | OpenStreetMap tile downloads need internet; MQTT/DuckDB can work locally without it. |
-| Session selector is hard to navigate | Select a marker/station, filter Active/Completed or search by session number. |
-| No meter curve | Select a session that has received meter events; a completed session stops gaining readings. |
+| **Broker won't start / port 1883 in use** | Another broker may already be running. Stop the earlier broker before rerunning `python src/local_broker.py`. |
+| **Dashboard says CONNECTING** | Confirm Terminal A is still running and that Run ID is nonempty. Wait until the subscriber prints **SUBACK**. |
+| **Applied events remains 0** | Confirm the Run ID in Terminal C **exactly matches** the Live Run ID. Check Publisher output and wait for SUBACK first. |
+| **Active sessions is 0** | Normal at the beginning of the short stream: most of its first events are price updates. Wait for `session_start` events; final short-run expected count is **15**. In the **complete historical run**, final Active sessions is **0** because all sessions have ended. |
+| **No charging curve** | Select a station that has sessions, use `All` or `Active` in **Session status**, and pick a session with meter readings. Not every station has an active session in the short replay. |
+| **Map marker can't be selected** | Zoom into a cluster and click an individual station marker; turn Auto-refresh Off temporarily while interacting with popups. |
+| **Historical replay shows no records** | Historical mode needs a populated `charger_analytics.duckdb`. Enter an **existing stored Run ID**; `integration-full-02` was used for the complete test, while the short replay uses a separate ID. |
+| **DuckDB conflicting lock** | Stop Streamlit and other processes reading/writing the analytics database before running external verification. Do **not** delete the database. |
+| **Map tiles missing** | OpenStreetMap basemap tiles require an internet connection, even though MQTT and DuckDB operate locally. |
+| **Large historical run is slow** | Switch **Auto-refresh (5s)** Off. The dashboard currently reconstructs its visual projection from the selected run's accumulated history, so very large runs may refresh more slowly. |
+| **Need to publish again** | Use a **fresh Run ID** in both the dashboard and Publisher. Do not restart with a completed ID unless following the documented checkpoint resume procedure. |
 
-**Known limitation:** incremental live DuckDB queries avoid rescanning all stored rows, but the dashboard's in-memory projection still rebuilds from all events for the selected run. Full-run historical rendering may be slower than the short replay.
+---
 
-## 10. Submission checklist
+## 7. Project layout — key files
 
-The Canvas **source-code/database ZIP** must contain the source scripts, the complete Task 1 generated datasets, full Task 2 event stream and manifest, `database/charger_analytics.duckdb`, the schema/DDL script, `requirements.txt` and this README. The **project report (maximum six pages of content)** and the **Generative AI Usage Report** are separate required submissions.
-
-**Do not create the ZIP using `git archive` alone:** the 134,162-event JSON is Git-ignored and the full DuckDB may exist only locally.
-
-After creating the ZIP, run:
-
-```bash
-python scripts/check_submission.py path/to/submission.zip
+```text
+README.md                       This document: overview and reproduction instructions
+requirements.txt                All Python dependencies for integrated operation
+config/                         Generator/operator settings
+vendor/                         Provided synthetic generation resources
+data/
+  source/                       Retained NSW/AEMO source files
+  input/                        Generator input
+  processed/                    Prepared A1 metadata and charger-to-station mapping
+  generated/                    stations.csv, prices_hourly.csv, sessions.csv, session_metering.csv
+  events/
+    mqtt_demo/events.json       Included 1,091-event example for a quick live replay
+    full/events.json            Prepared 134,162-event full stream (required in ZIP)
+    full/manifest.json          Full preparation checks and event counts
+  published/                    Per-run Publisher checkpoints and exported receipts
+database/
+  charger_metadata.duckdb       A1 stations and charger configurations
+  charger_analytics.duckdb      Real MQTT-ingested events and derived session state
+  analytics_schema.sql          Tables, integrity constraints and analytical views
+dashboard/
+  app.py                        Streamlit application (includes live and historical UI)
+src/
+  run_task1.py                  Run synthetic dataset generation
+  validate_task1.py             Check Task 1 outputs
+  prepare_events.py             Validate, filter and order MQTT-ready events
+  local_broker.py               Local MQTT server
+  publisher.py                  MQTT event publisher and resume checkpoints
+  integrated_runtime.py         Single subscriber and DuckDB worker
+  analytics_subscriber.py       Sequence validation, buffering, deduplication
+  analytics_storage.py          Transactional DuckDB event/state writes
+  analytics_queries.py          Current and historical metrics
+  task3_state.py                Event-driven dashboard projection
+scripts/
+  verify_full_stream.py         Prepared events + optional DuckDB payload comparison
+  check_submission.py           Check essential files in the final ZIP
+tests/                           Unit/integration tests
+docs/                            Technical details for generation, events and publishing
 ```
 
-This checks archive presence/structure and essential artifacts; it does not replace test execution or the DuckDB full-stream verifier. Do not include `.venv/`, `.git/`, local secrets, logs or SQLite development journals.
+For more information, refer to [Task 1 results](docs/task1_results.md), [event preparation](docs/task2_events.md), [publisher and recovery](docs/task2_publishing.md), [event schema](docs/event_schema.md) and [MQTT topics](docs/mqtt_topics.md).
 
-Additional technical records are in `docs/`; historical Task 3 and Task 4 standalone modules remain in `src/` as provenance but are **not** part of the recommended integrated startup procedure.
+---
+
+## 8. Final submission and reproducibility checklist
+
+The Canvas submission requires a **source-code/database ZIP**, **project report (PDF)** and **separate Generative AI Usage Report**. Before submitting, confirm that the ZIP contains:
+
+- The complete project source, `requirements.txt`, `README.md` and `database/analytics_schema.sql`.
+- The validated metadata database `database/charger_metadata.duckdb` and **persisted analytics database** `database/charger_analytics.duckdb`.
+- All four Task 1 generated datasets in `data/generated/`.
+- The full **134,162-event** JSON file `data/events/full/events.json` and its manifest, plus the short `data/events/mqtt_demo/events.json`.
+- Any supporting source/config files required by the provided generator.
+
+**Do not rely on `git archive` or a fresh Git clone for the full hand-in**: the full `events.json` and populated analytics database can be Git-ignored/local artifacts.
+
+After creating `submission.zip`:
+
+```bash
+python scripts/check_submission.py submission.zip
+```
+
+The checker verifies that the essential ZIP members exist and are nonempty, including the full event-stream size. It does not prove the application runs or validate the accuracy of the written report. Exclude `.git/`, `.venv/`, caches and development-only files from the ZIP.
+
+**Runtime assumptions and limits:** local MQTT broker on `127.0.0.1:1883`; a single integrated MQTT subscriber/analytics writer; synthetic data and UTC-normalised event timestamps; OpenStreetMap requires internet; Streamlit/DuckDB run on the assessor's own computer; the full 134,162-event MQTT replay takes **at least ~3 h 44 min** at the required minimum publishing interval and is **not required** to demonstrate the system if the persisted full-run DuckDB is included.
